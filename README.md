@@ -24,15 +24,15 @@ Set `NEXT_PUBLIC_CONTACT_EMAIL` to the confirmed public business email, then reb
 
 ## Portfolio
 
-The Flow Plumbing demo is a 15-second animated product concept with a simulated cursor, quote generation, status update and reminder. It starts when it enters the viewport, plays once, and supports pause/replay. It pauses offscreen and when the tab is hidden. Reduced-motion visitors see the completed static scene with an explicit Play example control. Returning from a hidden tab resumes playback unless the visitor paused it. It uses sample data and sends nothing.
+The Flow Plumbing demo is a 20-second animated product concept with six scenes: customer request, itemised quote form, quote document, dashboard, approval and reminder. Cursor targets are measured from actual scene elements. It starts when it enters the viewport, plays once, and supports pause/replay. It pauses offscreen and when the tab is hidden. Reduced-motion visitors see the completed static scene with an explicit Play example control. Returning from a hidden tab resumes playback unless the visitor paused it. It uses sample data and sends nothing.
 
-The gallery uses the supplied Tilted Grid Hero with Flow Plumbing illustrations and two explicitly labelled illustrative concepts (bookings and operations) and a reserved website slot, not completed client work. No live-app link is offered.
+The gallery uses the supplied Tilted Grid Hero with Flow Plumbing illustrations and two explicitly labelled illustrative concepts (bookings and operations) and a fictional architectural website concept, not completed client work. No live-app link is offered.
 
 The original site is retained on GitHub branch `backup/before-expanding-demo` (commit `5d9b1b3`). The intermediate expanding prototype is commit `8ad6567`.
 
 ## Components and provenance
 
-- `components/ui/tilted-grid-hero.tsx`: the user's supplied React component, integrated into the Work section. Gallery motion starts only on request, pauses after 18 seconds or when outside the viewport, and respects reduced motion. Replace `galleryImages` in `components/site-interactions.tsx` to add future portfolio assets.
+- `components/ui/tilted-grid-hero.tsx`: the user's supplied React component, integrated into the Work section. Gallery motion starts when visible, offers a pause control, pauses offscreen, and respects reduced motion. The original component defaults restore the supplied reference composition. Replace `galleryImages` in `components/site-interactions.tsx` to add future portfolio assets.
 - `components/ui/spotlight.tsx`: actual Motion Primitives Spotlight source by ibelick, MIT, retrieved from https://github.com/ibelick/motion-primitives/blob/main/components/core/spotlight.tsx (blob `59012f27dd56cee2f718fb4e93b9c77d048547a9`), also listed on https://21st.dev/@ibelick/components/spotlight. Integrated in the dark featured-work card; hidden for touch and disabled for reduced motion.
 - `lib/utils.ts`, `components.json`, and `@/*` aliases provide the shadcn-compatible structure.
 - Fonts: Plus Jakarta Sans and Space Grotesk, bundled through Fontsource.
