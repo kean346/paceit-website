@@ -11,12 +11,15 @@ export function QuoteWalkthrough(){
  const [visible,setVisible]=useState(false);
  const [reduced,setReduced]=useState(true);
  const [run,setRun]=useState(0);
+ const [manual,setManual]=useState(false);
+ const [tabVisible,setTabVisible]=useState(true);
  useEffect(()=>{const media=matchMedia('(prefers-reduced-motion: reduce)');const update=()=>setReduced(media.matches);update();media.addEventListener('change',update);return()=>media.removeEventListener('change',update);},[]);
- useEffect(()=>{const observer=new IntersectionObserver(([entry])=>setVisible(entry.isIntersecting),{threshold:.35});if(root.current)observer.observe(root.current);return()=>observer.disconnect();},[]);
- useEffect(()=>{const hide=()=>{if(document.hidden)setPaused(true);};document.addEventListener('visibilitychange',hide);return()=>document.removeEventListener('visibilitychange',hide);},[]);
- const playing=visible&&!paused&&!reduced&&time<duration;
+ useEffect(()=>{if(!('IntersectionObserver' in window)){setVisible(true);return;}const observer=new IntersectionObserver(([entry])=>setVisible(entry.isIntersecting),{threshold:0.05});if(root.current)observer.observe(root.current);return()=>observer.disconnect();},[]);
+ useEffect(()=>{const update=()=>setTabVisible(!document.hidden);update();document.addEventListener('visibilitychange',update);return()=>document.removeEventListener('visibilitychange',update);},[]);
+ const staticView=reduced&&!manual;
+ const playing=visible&&tabVisible&&!paused&&!staticView&&time<duration;
  useEffect(()=>{if(!playing)return;const timer=setInterval(()=>setTime(t=>Math.min(duration,t+250)),250);return()=>clearInterval(timer);},[playing]);
- const t=reduced?duration:time;
+ const t=staticView?duration:time;
  const generating=t>=2500&&t<5000;
  const created=t>=5000;
  const editing=t>=8500&&t<11500;
@@ -25,7 +28,7 @@ export function QuoteWalkthrough(){
  const click=t>=1750&&t<2250||t>=7500&&t<8000||t>=10500&&t<11000;
  const cursor=t<1000?{left:'43%',top:'79%'}:t<6000?{left:'82%',top:'24%'}:t<9500?{left:'85%',top:'55%'}:t<12500?{left:'66%',top:'73%'}:{left:'79%',top:'82%'};
  const chapter=t<5000?'Generate a quote.':t<8500?'Everything in one place.':t<11500?'Update it in a click.':'A clear next step.';
- function replay(){setTime(0);setPaused(false);setRun(n=>n+1);}
+ function replay(){setManual(true);setVisible(true);setTime(0);setPaused(false);setRun(n=>n+1);}
  return <div ref={root} className="film-card" data-paused={!playing}>
   {!reduced&&<Spotlight size={520} className="film-spotlight"/>}
   <div className="film-top"><span className="mono"><i className="signal-dot"/>FLOW PLUMBING / DEMO FILM</span><span className="film-sample">Fictional business · Sample data</span></div>
@@ -47,8 +50,8 @@ export function QuoteWalkthrough(){
     {!reduced&&time<duration&&<div aria-hidden="true" className={'film-cursor '+(click?'film-click':'')} style={cursor}><MousePointer2 fill="#0f0f11" stroke="white" size={27}/><span>paceIT</span></div>}
    </div>
   </div>
-  <div className="film-caption"><div><span className="mono">{t<5000?'01 / CREATE':t<11500?'02 / UPDATE':'03 / MOVE FORWARD'}</span><h4>{chapter}</h4></div><div className="film-controls">{!reduced&&<span className="mono">{String(Math.floor(time/1000)).padStart(2,'0')} / 15s</span>}{!reduced&&time<duration&&<button aria-label={paused?'Resume animation':'Pause animation'} onClick={()=>setPaused(v=>!v)}>{paused?<Play size={16}/>:<Pause size={16}/>}</button>}{!reduced&&<button aria-label="Replay animation" onClick={replay}><RotateCcw size={16}/></button>}</div></div>
+  <div className="film-caption"><div><span className="mono">{t<5000?'01 / CREATE':t<11500?'02 / UPDATE':'03 / MOVE FORWARD'}</span><h4>{chapter}</h4></div><div className="film-controls"><span className="mono">{String(Math.floor(t/1000)).padStart(2,'0')} / 15s</span>{!staticView&&time<duration&&<button className="film-control-label" aria-label={paused?'Resume animation':'Pause animation'} onClick={()=>setPaused(v=>!v)}>{paused?<Play size={16}/>:<Pause size={16}/>}<span>{paused?'Resume':'Pause'}</span></button>}<button className="film-control-label" aria-label={staticView?'Play animation':'Replay animation'} onClick={replay}>{staticView?<Play size={16}/>:<RotateCcw size={16}/>}<span>{staticView?'Play example':'Replay'}</span></button></div></div>
   <div className="film-progress" aria-hidden="true"><span style={{width:`${t/duration*100}%`}}/></div>
-  <p className="film-note">Animated product concept. No live data or messages.</p>
+  <p className="film-note">{staticView?'Motion is off on your device. Play the example if you’d like to see the sequence.':'Animated product concept. No live data or messages.'}</p>
  </div>;
 }

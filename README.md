@@ -24,9 +24,9 @@ Set `NEXT_PUBLIC_CONTACT_EMAIL` to the confirmed public business email, then reb
 
 ## Portfolio
 
-The Flow Plumbing demo is a 15-second animated product concept with a simulated cursor, quote generation, status update and reminder. It starts when at least 35% visible, plays once, and supports pause/replay. It pauses offscreen and when the tab is hidden. Reduced-motion visitors see the completed static scene. It uses sample data and sends nothing.
+The Flow Plumbing demo is a 15-second animated product concept with a simulated cursor, quote generation, status update and reminder. It starts when it enters the viewport, plays once, and supports pause/replay. It pauses offscreen and when the tab is hidden. Reduced-motion visitors see the completed static scene with an explicit Play example control. Returning from a hidden tab resumes playback unless the visitor paused it. It uses sample data and sends nothing.
 
-The gallery uses the supplied Tilted Grid Hero with Flow Plumbing illustrations and two explicitly labelled illustrative concepts (bookings and operations), not completed client work. No live-app link is offered.
+The gallery uses the supplied Tilted Grid Hero with Flow Plumbing illustrations and two explicitly labelled illustrative concepts (bookings and operations) and a reserved website slot, not completed client work. No live-app link is offered.
 
 The original site is retained on GitHub branch `backup/before-expanding-demo` (commit `5d9b1b3`). The intermediate expanding prototype is commit `8ad6567`.
 

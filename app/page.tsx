@@ -25,9 +25,9 @@ export default function Home() {
    </section>
 
    <section className="work-section" id="work" aria-labelledby="work-title">
-    <div className="section-shell"><Reveal><div className="section-heading"><div><p className="eyebrow section-index">01 / THE DEMO ROOM</p><h2 id="work-title">Small ideas.<br/><span className="muted-heading">In working order.</span></h2></div><p>A few ways better systems could look.<br/>Concepts today. Room for what comes next.</p></div></Reveal></div>
+    <div className="section-shell"><Reveal><div className="section-heading"><div><p className="eyebrow section-index">01 / PORTFOLIO</p><h2 id="work-title">Selected work.<br/><span className="muted-heading">Practical possibilities.</span></h2></div><p>Websites, apps and better ways to work.<br/>Explore the demos and concepts below.</p></div></Reveal></div>
     <PortfolioGallery />
-    <div className="section-shell"><div className="project-heading"><div><p className="eyebrow">DEMO FILM / 001</p><h3>From quote to next step.</h3><p>Flow Plumbing · A quotes workspace for a fictional Pretoria business.</p></div><span className="outline-pill">Demo project <span>·</span> Fictional business</span></div>
+    <div className="section-shell dashboard-example" id="dashboard-example"><div className="example-intro"><p className="eyebrow section-index">IN ACTION / A CUSTOM DASHBOARD</p><h2>See what a better<br/><span className="muted-heading">workflow looks like.</span></h2><p>From request to ready. An example of a custom dashboard that brings quotes, approvals and follow-ups together.</p></div><div className="project-heading"><div><p className="eyebrow">THE EXAMPLE / FLOW PLUMBING</p><h3>From request to ready.</h3><p>A fictional plumbing business. An everyday admin problem.</p></div><span className="outline-pill">Demo project <span>·</span> Fictional business</span></div>
     <QuoteWalkthrough />
     <div className="project-details"><div><span className="mono">THE EVERYDAY PROBLEM</span><p>Quotes scattered across messages. Approvals to check. Customers to follow up with.</p></div><div><span className="mono">THE IDEA</span><p>One place to see what’s out, what’s approved and what needs your attention next.</p></div><div className="project-tags"><span>Web application</span><span>Workflow design</span><span>Animated demo</span></div></div></div>
    </section>
