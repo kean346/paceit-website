@@ -12,12 +12,12 @@ export function Reveal({children}:{children:ReactNode}) {
  useEffect(()=>{const el=ref.current;if(!el||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const ob=new IntersectionObserver(([e])=>{if(e.isIntersecting){el.classList.add('is-visible');ob.disconnect();}},{threshold:.08});el.classList.add('reveal-ready');ob.observe(el);return()=>ob.disconnect();},[]);
  return <div ref={ref}>{children}</div>;
 }
-const galleryImages=[{src:'/work/overview.svg',alt:'Flow Plumbing quotes overview prototype'},{src:'/work/quote.svg',alt:'Quote details prototype'},{src:'/work/followups.svg',alt:'Follow-up view prototype'},{src:'/work/overview.svg',alt:'Quotes overview'}];
+const galleryImages=[{src:'/work/overview.svg',alt:'Flow Plumbing quotes overview prototype'},{src:'/work/bookings-concept.svg',alt:'Concept only: appointment scheduling dashboard'},{src:'/work/operations-concept.svg',alt:'Concept only: business operations dashboard'},{src:'/work/quote.svg',alt:'Flow Plumbing quote demo'}];
 export function PortfolioGallery(){
  const [playing,setPlaying]=useState(false);const ref=useRef<HTMLDivElement>(null);
  useEffect(()=>{if(!playing)return;const timer=setTimeout(()=>setPlaying(false),18000);return()=>clearTimeout(timer);},[playing]);
  useEffect(()=>{const el=ref.current;if(!el)return;const ob=new IntersectionObserver(([e])=>{if(!e.isIntersecting)setPlaying(false);});ob.observe(el);return()=>ob.disconnect();},[]);
- return <div ref={ref} className={'portfolio-gallery '+(playing?'gallery-playing':'gallery-paused')}><TiltedGridHero images={galleryImages} tileHeight={76} axis={51} curve={42} speed={6} gap={10} fade={12} className="gallery-band"/><div className="gallery-caption section-shell"><span className="mono">ONE PROJECT. THREE VIEWS. <span className="gallery-mobile-hide">/ FLOW PLUMBING</span></span><button className="gallery-toggle" onClick={()=>setPlaying(!playing)} aria-pressed={playing}>{playing?<Pause size={14}/>:<Play size={14}/>} {playing?'Pause reel':'Play reel'}</button></div></div>;
+ return <div ref={ref} className={'portfolio-gallery '+(playing?'gallery-playing':'gallery-paused')}><TiltedGridHero images={galleryImages} tileHeight={82} axis={28} curve={28} speed={6} gap={10} fade={12} className="gallery-band"/><div className="gallery-caption section-shell"><span className="mono">THE DEMO ROOM <span className="gallery-mobile-hide">/ SAMPLE CONCEPTS, NOT CLIENT PROJECTS</span></span><button className="gallery-toggle" onClick={()=>setPlaying(!playing)} aria-pressed={playing}>{playing?<Pause size={14}/>:<Play size={14}/>} {playing?'Pause reel':'Play reel'}</button></div></div>;
 }
 export function ContactForm(){
  const [message,setMessage]=useState('');const [brief,setBrief]=useState('');

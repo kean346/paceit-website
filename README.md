@@ -24,9 +24,11 @@ Set `NEXT_PUBLIC_CONTACT_EMAIL` to the confirmed public business email, then reb
 
 ## Portfolio
 
-The Flow Plumbing walkthrough uses browser-local sample data. It is clearly labelled as a fictional demonstration, not a real customer case study. It does not connect to the plumbing database or send follow-up messages. The curved gallery shows three purpose-made SVG views of the same prototype, not additional client projects or claimed screenshots.
+The Flow Plumbing demo is a 15-second animated product concept with a simulated cursor, quote generation, status update and reminder. It starts when at least 35% visible, plays once, and supports pause/replay. It pauses offscreen and when the tab is hidden. Reduced-motion visitors see the completed static scene. It uses sample data and sends nothing.
 
-The original demo was found at `kean346/paceit-plumbing-demo` with a Vercel project, but public availability and database readiness were not established, so no live-app button is shown.
+The gallery uses the supplied Tilted Grid Hero with Flow Plumbing illustrations and two explicitly labelled illustrative concepts (bookings and operations), not completed client work. No live-app link is offered.
+
+The original site is retained on GitHub branch `backup/before-expanding-demo` (commit `5d9b1b3`). The intermediate expanding prototype is commit `8ad6567`.
 
 ## Components and provenance
 

@@ -25,11 +25,11 @@ export default function Home() {
    </section>
 
    <section className="work-section" id="work" aria-labelledby="work-title">
-    <div className="section-shell"><Reveal><div className="section-heading"><div><p className="eyebrow section-index">01 / SELECTED WORK</p><h2 id="work-title">Less explaining.<br/><span className="muted-heading">More showing.</span></h2></div><p>A closer look at the things we build.<br/>Starting with one everyday business problem.</p></div></Reveal></div>
+    <div className="section-shell"><Reveal><div className="section-heading"><div><p className="eyebrow section-index">01 / THE DEMO ROOM</p><h2 id="work-title">Small ideas.<br/><span className="muted-heading">In working order.</span></h2></div><p>A few ways better systems could look.<br/>Concepts today. Room for what comes next.</p></div></Reveal></div>
     <PortfolioGallery />
-    <div className="section-shell"><div className="project-heading"><div><p className="eyebrow">FEATURED EXPLORATION / 001</p><h3>From quote to next step.</h3><p>Flow Plumbing · A quotes workspace for a fictional Pretoria business.</p></div><span className="outline-pill">Demo project <span>·</span> Fictional business</span></div>
+    <div className="section-shell"><div className="project-heading"><div><p className="eyebrow">DEMO FILM / 001</p><h3>From quote to next step.</h3><p>Flow Plumbing · A quotes workspace for a fictional Pretoria business.</p></div><span className="outline-pill">Demo project <span>·</span> Fictional business</span></div>
     <QuoteWalkthrough />
-    <div className="project-details"><div><span className="mono">THE EVERYDAY PROBLEM</span><p>Quotes scattered across messages. Approvals to check. Customers to follow up with.</p></div><div><span className="mono">THE IDEA</span><p>One place to see what’s out, what’s approved and what needs your attention next.</p></div><div className="project-tags"><span>Web application</span><span>Workflow design</span><span>Interactive prototype</span></div></div></div>
+    <div className="project-details"><div><span className="mono">THE EVERYDAY PROBLEM</span><p>Quotes scattered across messages. Approvals to check. Customers to follow up with.</p></div><div><span className="mono">THE IDEA</span><p>One place to see what’s out, what’s approved and what needs your attention next.</p></div><div className="project-tags"><span>Web application</span><span>Workflow design</span><span>Animated demo</span></div></div></div>
    </section>
 
    <section className="services-section section-shell" id="services" aria-labelledby="services-title"><Reveal><div className="section-heading"><div><p className="eyebrow section-index">02 / WHAT WE CAN BUILD</p><h2 id="services-title">Your problem.<br/><span className="muted-heading">Our starting point.</span></h2></div><p>A useful tool should fit your business.<br/>Let’s work out what yours needs.</p></div></Reveal>
