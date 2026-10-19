@@ -12,19 +12,18 @@ export function Reveal({children}:{children:ReactNode}) {
  useEffect(()=>{const el=ref.current;if(!el||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const ob=new IntersectionObserver(([e])=>{if(e.isIntersecting){el.classList.add('is-visible');ob.disconnect();}},{threshold:.08});el.classList.add('reveal-ready');ob.observe(el);return()=>ob.disconnect();},[]);
  return <div ref={ref}>{children}</div>;
 }
-const projects=[
- {title:'Flow Plumbing',type:'Dashboard demo',src:'/work/overview.svg',text:'Quotes, approvals and the next customer follow-up.',status:'Demo project',ready:true},
- {title:'Business website',type:'Website slot',src:'/work/website-placeholder.svg',text:'A place for the next website project. Details coming soon.',status:'Coming soon',ready:false},
- {title:'Booking workspace',type:'App concept',src:'/work/bookings-concept.svg',text:'A calmer view of appointments and the day ahead.',status:'Concept only',ready:false},
- {title:'Operations workspace',type:'Dashboard concept',src:'/work/operations-concept.svg',text:'An overview of requests, active work and what’s ready.',status:'Concept only',ready:false},
+const galleryImages=[
+ {src:'/work/overview.svg',alt:'Flow Plumbing — dashboard demo'},
+ {src:'/work/website-placeholder.svg',alt:'Field Studio — fictional website concept'},
+ {src:'/work/bookings-concept.svg',alt:'Daylight — booking app concept'},
+ {src:'/work/operations-concept.svg',alt:'Relay — operations board concept'},
 ];
-const galleryImages=projects.map(p=>({src:p.src,alt:p.title+' — '+p.status}));
 export function PortfolioGallery(){
  const [paused,setPaused]=useState(false);const [visible,setVisible]=useState(false);const [reduced,setReduced]=useState(true);const ref=useRef<HTMLDivElement>(null);
  useEffect(()=>{const media=matchMedia('(prefers-reduced-motion: reduce)');const update=()=>setReduced(media.matches);update();media.addEventListener('change',update);return()=>media.removeEventListener('change',update);},[]);
  useEffect(()=>{if(!ref.current)return;const ob=new IntersectionObserver(([e])=>setVisible(e.isIntersecting));ob.observe(ref.current);return()=>ob.disconnect();},[]);
  const playing=visible&&!paused&&!reduced;
- return <div ref={ref} className={'portfolio-gallery portfolio-reference '+(playing?'gallery-playing':'gallery-paused')}><TiltedGridHero images={galleryImages} className="gallery-band"><div className="reference-copy"><h2 id="work-title">Selected work.</h2><p>Websites, software and automation<br/>built around real business needs.</p></div></TiltedGridHero><div className="reference-footer section-shell"><div className="project-links"><a href="#dashboard-example">Flow Plumbing <span>Demo</span><ArrowUpRight size={15}/></a><span>Business website <small>Concept</small></span><span>Bookings app <small>Concept</small></span><span>Operations <small>Concept</small></span></div>{!reduced&&<button className="gallery-toggle" onClick={()=>setPaused(v=>!v)} aria-label={paused?'Resume carousel':'Pause carousel'}>{paused?<Play size={15}/>:<Pause size={15}/>}</button>}</div></div>;
+ return <div ref={ref} className={'portfolio-gallery portfolio-reference '+(playing?'gallery-playing':'gallery-paused')}><TiltedGridHero images={galleryImages} tileHeight={36} className="gallery-band"><div className="reference-copy"><h2 id="work-title">Selected work.</h2><p>Websites, software and automation<br/>built around real business needs.</p></div></TiltedGridHero><div className="reference-footer"><span>Demo projects &amp; design concepts</span>{!reduced&&<button className="gallery-toggle" onClick={()=>setPaused(v=>!v)} aria-label={paused?'Resume carousel':'Pause carousel'}>{paused?<Play size={15}/>:<Pause size={15}/>}<span>{paused?'Resume':'Pause'}</span></button>}</div></div>;
 }
 export function ContactForm(){
  const [message,setMessage]=useState('');const [brief,setBrief]=useState('');

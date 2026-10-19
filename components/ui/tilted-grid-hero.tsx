@@ -201,6 +201,7 @@ export function TiltedGridHero({
   // loop's ends, where it wraps, fall inside that stretch, and so do tiles
   // swinging round behind the camera.
   const hide = +(((sweep - limit) / (2 * sweep || 1)) * 100).toFixed(4);
+  const duration = columns * speed;
   const css =
     `@keyframes ${orbit}{` +
     `from{transform:${turn(-sweep)}}to{transform:${turn(sweep)}}` +
@@ -209,10 +210,11 @@ export function TiltedGridHero({
     // Pausing rather than removing the motion keeps the band whole: every
     // tile is already placed by its negative delay, so it freezes as a
     // finished still.
-    `@media(prefers-reduced-motion:reduce){.${tile}{animation-play-state:paused}}`;
+    // Preserve negative-delay positions even when the host globally shortens animations.
+    `.${tile}{animation-duration:${duration}s!important;animation-iteration-count:infinite!important}` +
+    `@media(prefers-reduced-motion:reduce){.${tile}{animation-play-state:paused!important}}`;
 
   const share = aspectRatio / SLICES;
-  const duration = columns * speed;
   const mask = `linear-gradient(90deg,transparent,#000 ${fade}%,#000 ${
     100 - fade
   }%,transparent)`;
