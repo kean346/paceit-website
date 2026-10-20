@@ -66,7 +66,17 @@ const canonical = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://paceit.co
     const still = await page.locator('#work-gallery canvas').evaluate(async canvas => { const before = canvas.toDataURL(); await new Promise(resolve => setTimeout(resolve, 200)); return before === canvas.toDataURL(); });
     assert(still, 'Pause must freeze the actual rendered gallery');
     await page.getByRole('button', { name: 'Resume gallery', exact: true }).click();
-    const moving = await page.locator('#work-gallery canvas').evaluate(async canvas => { const before = canvas.toDataURL(); await new Promise(resolve => setTimeout(resolve, 300)); return before !== canvas.toDataURL(); });
+    await page.waitForFunction(() => document.querySelector('#work-gallery').classList.contains('gallery-playing'));
+    // Software WebGL can resume slowly under load. Wait for a real pixel
+    // change instead of assuming two rendered frames fit inside 300 ms.
+    const moving = await page.locator('#work-gallery canvas').evaluate(async canvas => {
+      const before = canvas.toDataURL();
+      for (let attempt = 0; attempt < 30; attempt++) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        if (before !== canvas.toDataURL()) return true;
+      }
+      return false;
+    });
     assert(moving, 'Gallery must move after resuming');
     assert(requests.includes('/work/sa-family-travel-elephants.webp'));
     await page.getByRole('tab', { name: /Daylight/ }).click();
