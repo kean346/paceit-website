@@ -8,7 +8,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "render:film": "node scripts/render-flow-demo.cjs",
-    "render:work": "node scripts/render-work-art.cjs"
+    "render:work": "node scripts/capture-work-previews.cjs"
   },
   "dependencies": {
     "@fontsource/plus-jakarta-sans": "5.3.0",
@@ -27,6 +27,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "playwright": "1.62.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

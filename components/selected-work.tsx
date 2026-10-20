@@ -4,41 +4,33 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { ArrowDownRight, ArrowUpRight, Pause, Play } from 'lucide-react';
 import { TiltedGridHero } from '@/components/ui/tilted-grid-hero';
 import { QuoteWalkthrough } from '@/components/quote-walkthrough';
+import { DaylightDemo, RelayDemo } from '@/components/work-demos';
 
 // Replace these images and descriptions with real project screenshots as the collection grows.
 const projects = [
   {
     id: 'flow', name: 'Flow Plumbing', type: 'Product demo', category: 'Quotes & follow-ups',
     image: '/work/flow-plumbing-preview.webp', alt: 'Flow Plumbing quote dashboard with an approved quote and scheduled reminder',
-    title: <>One request.<br />A clear next step.</>,
+    title: <>Flow Plumbing.<br /><span className="muted-heading">A clearer quote workflow.</span></>,
     description: 'From a customer message to an approved quote and a scheduled follow-up. See the whole journey in 20 seconds.',
     problem: 'Quotes scattered across messages. Approvals to check. Customers to follow up with.',
     idea: 'One place to see what’s out, what’s approved and what needs your attention next.',
     tags: ['Web application', 'Workflow design', 'Product demo'],
   },
   {
-    id: 'field', name: 'Field Studio', type: 'Design concept', category: 'Architecture website',
-    image: '/work/field-studio-preview.webp', alt: 'Field Studio architecture website concept with warm typography and an original garden arch illustration',
-    title: <>A quieter kind of<br />first impression.</>,
-    description: 'An illustrative website for a fictional architecture studio. Considered typography, warm materials and a little room to breathe.',
-    problem: 'Good work needs a clear introduction. Visitors should understand the studio before they ever get in touch.',
-    idea: 'A simple, expressive website that lets the spaces, the story and the next step speak for themselves.',
-    tags: ['Website concept', 'Visual direction', 'Fictional studio'],
-  },
-  {
-    id: 'daylight', name: 'Daylight', type: 'Design concept', category: 'Bookings & scheduling',
+    id: 'daylight', name: 'Daylight', type: 'Interactive concept', category: 'Bookings & scheduling',
     image: '/work/daylight-preview.webp', alt: 'Daylight booking workspace concept with a weekly calendar, appointments and a next appointment panel',
-    title: <>A little more room<br />in your day.</>,
-    description: 'A booking workspace concept for a small service business. A clear calendar, an easy overview and the next appointment, always in view.',
+    title: <>Daylight.<br /><span className="muted-heading">A more organised day.</span></>,
+    description: 'A booking workspace for a small service business. Select an appointment or add one of your own to see how the calendar works.',
     problem: 'Bookings spread across messages and calendars make it harder to see where the day has gone.',
     idea: 'Bring appointments, customers and availability into one calm, readable workspace.',
     tags: ['Product concept', 'Booking workflow', 'Sample data'],
   },
   {
-    id: 'relay', name: 'Relay', type: 'Design concept', category: 'Operations & handovers',
+    id: 'relay', name: 'Relay', type: 'Interactive concept', category: 'Operations & handovers',
     image: '/work/relay-preview.webp', alt: 'Relay operations workspace concept showing tasks moving from to do to in progress and ready to review',
-    title: <>Less status chasing.<br />More moving forward.</>,
-    description: 'An operations workspace concept for a small team. The work, its progress and the next handover, connected in one place.',
+    title: <>Relay.<br /><span className="muted-heading">A shared view of the work.</span></>,
+    description: 'A project board for a small team. Open a task, change its owner or status, and see the board update. All data is fictional.',
     problem: 'When progress lives in different conversations, even a small handover can take more chasing than it should.',
     idea: 'Give every piece of work a clear place, a visible status and an obvious next step.',
     tags: ['Product concept', 'Team workflows', 'Sample data'],
@@ -88,27 +80,23 @@ export function SelectedWork() {
   }
 
   return <div className="work-collection">
-    <div className="section-shell work-intro">
-      <div>
-        <p className="eyebrow work-eyebrow"><span className="signal-dot" />01 / Selected work</p>
-        <h2 id="work-title">Good ideas.<br /><span>Made useful.</span></h2>
-      </div>
-      <div className="work-intro-copy">
-        <p>From a useful website to a calmer working day. Explore a product demo and a few design possibilities.</p>
-        <a href="#dashboard-example" onClick={() => setActive(0)}>Watch the Flow Plumbing demo <ArrowDownRight size={17} /></a>
-      </div>
-    </div>
-
     <div className="work-reel-wrap" ref={reel}>
+      <TiltedGridHero images={galleryImages} className={`work-reel ${playing ? 'gallery-playing' : 'gallery-paused'}`}>
+        <div className="work-reel-content">
+          <div className="work-intro">
+            <p className="eyebrow work-eyebrow">01 / Selected work</p>
+            <h2 id="work-title">Good ideas.<br /><span className="muted-heading">Made useful.</span></h2>
+          </div>
+          <p className="work-reel-copy">Websites and software, designed around the work.<br />Explore a project or try a concept below.</p>
+        </div>
+      </TiltedGridHero>
       <div className="section-shell work-reel-toolbar">
-        <span className="mono">A FEW THINGS WE COULD MAKE POSSIBLE</span>
+        <a href="#dashboard-example" onClick={() => setActive(0)}>Watch the Flow Plumbing demo <ArrowDownRight size={16} /></a>
         {reduced ? <span className="work-motion-note">A still view, at your pace.</span> :
           <button type="button" className="work-motion-toggle" aria-label={paused ? 'Resume project gallery' : 'Pause project gallery'} aria-pressed={paused} onClick={() => setPaused(value => !value)}>
             {paused ? <Play size={13} /> : <Pause size={13} />}<span>{paused ? 'Resume' : 'Pause'} gallery</span>
           </button>}
       </div>
-      <TiltedGridHero images={galleryImages} speed={6} tileHeight={53} aspectRatio={1.6} gap={9} axis={50} curve={74} fade={8}
-        className={`work-reel ${playing ? 'gallery-playing' : 'gallery-paused'}`} />
     </div>
 
     <div className="section-shell work-projects" role="tablist" aria-label="Explore projects and design concepts">
@@ -124,10 +112,10 @@ export function SelectedWork() {
     <div className="section-shell work-feature" id="dashboard-example">
       <div id="work-project-panel" role="tabpanel" aria-labelledby={`work-tab-${project.id}`} tabIndex={0}>
         <div className="work-feature-head">
-          <div><p className="eyebrow work-feature-kicker">{project.type} / {project.name}</p><h3>{project.title}</h3></div>
+          <div><p className="eyebrow work-feature-kicker">{project.type} / {project.category}</p><h3>{project.title}</h3></div>
           <p className="work-feature-description">{project.description}</p>
         </div>
-        {project.id === 'flow' ? <QuoteWalkthrough /> : <figure className={`work-concept-preview work-concept-${project.id}`}>
+        {project.id === 'flow' ? <QuoteWalkthrough /> : project.id === 'daylight' ? <DaylightDemo /> : project.id === 'relay' ? <RelayDemo /> : <figure className={`work-concept-preview work-concept-${project.id}`}>
           <img src={project.image} alt={project.alt} width={1600} height={1000} />
           <figcaption><span>{project.name} <i /> Design concept</span><span>Fictional business · Illustrative preview</span></figcaption>
         </figure>}
