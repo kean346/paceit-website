@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 // Strips per tile. Each is a few degrees of arc, too little to read as a
 // facet; fewer starts to show corners along the top and bottom edges. A
 // tight curve wraps a tile round a wide arc, so it needs this many.
-const SLICES = 16;
+const SLICES = 24;
 
 // Camera distance from the screen, as a multiple of the cylinder's radius.
 // Just past the axis, so the ends come right up to the lens and swell; much
@@ -294,12 +294,16 @@ export function TiltedGridHero({
                     // Every strip starts at the tile's centre and is turned
                     // round the axis to its own place on the arc.
                     left: u((aspectRatio - share) / 2),
-                    // A pixel wider than its share, so neighbouring facets
+                    // Slightly wider than its share, so neighbouring facets
                     // overlap and no hairline opens between them. The last
                     // has no neighbour to cover.
                     width:
-                      k === SLICES - 1 ? u(share) : `calc(${u(share)} + 1px)`,
+                      k === SLICES - 1 ? u(share) : `calc(${u(share)} + 1.5px)`,
                     height: u(1),
+                    // Facets turning away from the viewer must not reappear as
+                    // oversized reverse faces near the camera at the row's ends.
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
                     transform: turn(
                       (aspectRatio / 2 - (k + 0.5) * share) * unit,
                     ),

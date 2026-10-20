@@ -47,24 +47,15 @@ const galleryImages = [
 
 export function SelectedWork() {
   const [active, setActive] = useState(0);
-  // Follow the device preference until the visitor explicitly chooses playback.
-  const [playback, setPlayback] = useState<boolean | null>(null);
+  const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [reduced, setReduced] = useState(true);
   const [tabVisible, setTabVisible] = useState(true);
   const reel = useRef<HTMLDivElement>(null);
   const tabs = useRef<Array<HTMLButtonElement | null>>([]);
   const project = projects[active];
-  const motionEnabled = playback ?? !reduced;
-  const playing = visible && tabVisible && motionEnabled;
-  const playbackAction = motionEnabled ? 'Pause' : playback === false ? 'Resume' : 'Play';
-
-  useEffect(() => {
-    const preference = matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReduced(preference.matches);
-    update(); preference.addEventListener('change', update);
-    return () => preference.removeEventListener('change', update);
-  }, []);
+  // This gallery starts automatically; Pause is an explicit visitor choice.
+  const playing = visible && tabVisible && !paused;
+  const playbackAction = paused ? 'Resume' : 'Pause';
   useEffect(() => {
     const element = reel.current;
     if (!element) return;
@@ -91,7 +82,8 @@ export function SelectedWork() {
 
   return <div className="work-collection">
     <div className="work-reel-wrap" ref={reel}>
-      <TiltedGridHero id="work-gallery" images={galleryImages} speed={10} gap={10} paused={!playing}
+      <TiltedGridHero id="work-gallery" images={galleryImages} speed={10} gap={10}
+        tileHeight={40} curve={65} fade={6} axis={57} paused={!playing}
         tileClassName="border border-white/20 shadow-2xl rounded-2xl bg-neutral-900 p-1 work-screen-surface" className={`work-reel ${playing ? 'gallery-playing' : 'gallery-paused'}`}>
         <div className="work-reel-content">
           <div className="work-intro">
@@ -102,9 +94,8 @@ export function SelectedWork() {
         </div>
       </TiltedGridHero>
       <div className="section-shell work-reel-toolbar">
-        {reduced && !motionEnabled && <span className="work-motion-note">A still view, at your pace.</span>}
-        <button type="button" className="work-motion-toggle" aria-label={`${playbackAction} project gallery`} aria-controls="work-gallery" onClick={() => setPlayback(!motionEnabled)}>
-          {motionEnabled ? <Pause size={13} /> : <Play size={13} />}<span>{playbackAction} gallery</span>
+        <button type="button" className="work-motion-toggle" aria-label={`${playbackAction} project gallery`} aria-controls="work-gallery" onClick={() => setPaused(value => !value)}>
+          {paused ? <Play size={13} /> : <Pause size={13} />}<span>{playbackAction} gallery</span>
         </button>
       </div>
     </div>
