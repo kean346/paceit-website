@@ -1,6 +1,6 @@
 import { ArrowUpRight, ArrowDown, ArrowRight, Code2, Workflow, PanelsTopLeft, Check, CornerDownRight } from 'lucide-react';
-import { Navigation, Reveal, PortfolioGallery, ContactForm } from '@/components/site-interactions';
-import { QuoteWalkthrough } from '@/components/quote-walkthrough';
+import { Navigation, Reveal, ContactForm } from '@/components/site-interactions';
+import { SelectedWork } from '@/components/selected-work';
 
 export default function Home() {
  return <>
@@ -25,10 +25,7 @@ export default function Home() {
    </section>
 
    <section className="work-section" id="work" aria-labelledby="work-title">
-    <PortfolioGallery />
-    <div className="section-shell dashboard-example" id="dashboard-example"><div className="example-intro"><h2>See a better workflow<br/><span className="muted-heading">in action.</span></h2><p>An example of how a custom dashboard can handle quotes, approvals and follow-ups.</p></div>
-    <QuoteWalkthrough />
-    <div className="project-details"><div><span className="mono">THE EVERYDAY PROBLEM</span><p>Quotes scattered across messages. Approvals to check. Customers to follow up with.</p></div><div><span className="mono">THE IDEA</span><p>One place to see what’s out, what’s approved and what needs your attention next.</p></div><div className="project-tags"><span>Web application</span><span>Workflow design</span><span>Animated demo</span></div></div></div>
+    <SelectedWork />
    </section>
 
    <section className="services-section section-shell" id="services" aria-labelledby="services-title"><Reveal><div className="section-heading"><div><p className="eyebrow section-index">02 / WHAT WE CAN BUILD</p><h2 id="services-title">Your problem.<br/><span className="muted-heading">Our starting point.</span></h2></div><p>A useful tool should fit your business.<br/>Let’s work out what yours needs.</p></div></Reveal>
