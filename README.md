@@ -20,7 +20,7 @@ npm run build
 
 ## Contact setup
 
-Set `NEXT_PUBLIC_CONTACT_EMAIL` to the confirmed public business email, then rebuild/redeploy. The form opens an email draft; it does not submit to a backend. Until configured it prepares and copies a brief, explicitly saying nothing has been sent. No analytics, cookies or form storage are implemented.
+The enquiry form opens a pre-filled email to `info@paceit.co.za`, including the visitor's name, email address and project brief. Visitors review and send it in their email app. The address is also displayed as a direct email link. This works without setting an environment variable; `NEXT_PUBLIC_CONTACT_EMAIL` is an optional public recipient override and requires a rebuild/redeploy when changed. The website does not send or store enquiries itself. No analytics, cookies or form storage are implemented.
 
 ## Portfolio
 

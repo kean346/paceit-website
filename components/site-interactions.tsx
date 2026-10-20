@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { ArrowUpRight, Check, Copy, Menu, X } from 'lucide-react';
+import { ArrowUpRight, Check, Menu, X } from 'lucide-react';
 
 export function Navigation() {
  const [open,setOpen]=useState(false);
@@ -13,9 +13,8 @@ export function Reveal({children}:{children:ReactNode}) {
 }
 export function ContactForm(){
  const [message,setMessage]=useState('');const [brief,setBrief]=useState('');
- const contact=process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim();
- async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();const data=new FormData(e.currentTarget);const text=`Project enquiry for paceIT\n\nName: ${data.get('name')}\nEmail: ${data.get('email')}\n\n${data.get('idea')}`;setBrief(text);
- if(contact){window.location.href=`mailto:${contact}?subject=${encodeURIComponent('Let’s discuss a project')}&body=${encodeURIComponent(text)}`;setMessage('Your email app will open with the brief. Send it there to get in touch.');return;}
- try{await navigator.clipboard.writeText(text);setMessage('Brief copied. Nothing has been sent.');}catch{setMessage('Your brief is ready below. Select and copy it.');}}
- return <form className="contact-form" onSubmit={submit}><div className="form-heading"><span className="mono">START WITH A FEW WORDS</span><span className="small-arrow">↗</span></div><label htmlFor="name">Your name<input name="name" id="name" autoComplete="name" placeholder="Kean, for example" required maxLength={100}/></label><label htmlFor="email">Email address<input name="email" id="email" type="email" autoComplete="email" placeholder="you@yourbusiness.co.za" required maxLength={254}/></label><label htmlFor="idea">What would you like to make easier?<textarea name="idea" id="idea" placeholder="Tell us a little about the problem or idea…" required minLength={10} maxLength={4000} rows={3}/></label><button className="button primary" type="submit">{contact?'Draft an enquiry':'Copy project brief'} {contact?<ArrowUpRight size={18}/>:<Copy size={17}/>}</button><p className="form-note">{contact?'Opens your email app. No information is stored on this website.':'Direct contact details are coming soon. Prepare and copy your brief here; nothing is sent or stored.'}</p><p className="form-status" role="status">{message&&<><Check size={14}/>{message}</>}</p>{brief&&<details className="brief-details"><summary>View your brief</summary><pre>{brief}</pre></details>}</form>;
+ const contact=process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || 'info@paceit.co.za';
+ function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();const data=new FormData(e.currentTarget);const text=`Project enquiry for paceIT\n\nName: ${String(data.get('name')).trim()}\nEmail: ${String(data.get('email')).trim()}\n\n${String(data.get('idea')).trim()}`;setBrief(text);
+ window.location.href=`mailto:${contact}?subject=${encodeURIComponent('Let’s discuss a project')}&body=${encodeURIComponent(text)}`;setMessage('Email draft prepared. Review it and select Send in your email app.');}
+ return <form className="contact-form" onSubmit={submit}><div className="form-heading"><span className="mono">START WITH A FEW WORDS</span><span className="small-arrow">↗</span></div><label htmlFor="name">Your name<input name="name" id="name" autoComplete="name" placeholder="Kean, for example" required maxLength={100}/></label><label htmlFor="email">Email address<input name="email" id="email" type="email" autoComplete="email" placeholder="you@yourbusiness.co.za" required maxLength={254}/></label><label htmlFor="idea">What would you like to make easier?<textarea name="idea" id="idea" placeholder="Tell us a little about the problem or idea…" required minLength={10} maxLength={4000} rows={3}/></label><button className="button primary" type="submit">Draft an enquiry <ArrowUpRight size={18}/></button><p className="form-note">Opens your email app with an enquiry to <a href={`mailto:${contact}`}>{contact}</a>. Review it and select Send there.</p><p className="form-status" role="status">{message&&<><Check size={14}/>{message}</>}</p>{brief&&<details className="brief-details"><summary>View your brief</summary><pre>{brief}</pre></details>}</form>;
 }
