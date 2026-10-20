@@ -105,6 +105,8 @@ export type TiltedGridHeroProps = {
    * @default 4
    */
   speed?: number;
+  /** Controlled playback. Omit to follow the device's reduced-motion preference. */
+  paused?: boolean;
   /** Tile height, as a percentage of the hero's height. @default 26 */
   tileHeight?: number;
   /** Tile width divided by tile height. @default 16 / 9 */
@@ -131,6 +133,7 @@ export type TiltedGridHeroProps = {
 export function TiltedGridHero({
   images,
   speed = 4,
+  paused,
   tileHeight = 26,
   aspectRatio = 16 / 9,
   gap = 6,
@@ -214,8 +217,12 @@ export function TiltedGridHero({
     // tile is already placed by its negative delay, so it freezes as a
     // finished still.
     // Preserve negative-delay positions even when the host globally shortens animations.
-    `.${tile}{animation-duration:${duration}s!important;animation-iteration-count:infinite!important}` +
-    `@media(prefers-reduced-motion:reduce){.${tile}{animation-play-state:paused!important}}`;
+    `.${tile}{animation-duration:${duration}s!important;animation-iteration-count:infinite!important;` +
+    (paused === undefined ? '' : `animation-play-state:${paused ? 'paused' : 'running'}!important;`) +
+    `}` +
+    // A controlled row lets its caller honor the preference by default and
+    // still start playback when a visitor explicitly presses Play.
+    (paused === undefined ? `@media(prefers-reduced-motion:reduce){.${tile}{animation-play-state:paused!important}}` : '');
 
   const share = aspectRatio / SLICES;
   const mask = `linear-gradient(90deg,transparent,#000 ${fade}%,#000 ${
