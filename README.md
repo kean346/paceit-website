@@ -24,7 +24,11 @@ Set `NEXT_PUBLIC_CONTACT_EMAIL` to the confirmed public business email, then reb
 
 ## Portfolio
 
-The Flow Plumbing demo is a 20-second animated product concept with six scenes: customer request, itemised quote form, quote document, dashboard, approval and reminder. Cursor targets are measured from actual scene elements. It starts when it enters the viewport, plays once, and supports pause/replay. It pauses offscreen and when the tab is hidden. Reduced-motion visitors see the completed static scene with an explicit Play example control. Returning from a hidden tab resumes playback unless the visitor paused it. It uses sample data and sends nothing.
+The Flow Plumbing demo is an original, silent 20-second product film, rendered at 1920 × 1080 and 60 fps. The customer request transforms into a quote form, quotation and dashboard row, followed by approval and a scheduled reminder. A single cursor follows timed control hit points; Alex Morgan, Q-008 and R 4,450 remain consistent throughout. The approved value increases from R 20,400 to R 24,850. The interface builds on the existing Flow Plumbing dashboard artwork.
+
+The MP4 is `public/work/flow-plumbing-demo.mp4`; its final-frame poster is `public/work/flow-plumbing-poster.jpg`. The website plays it once when visible, pauses offscreen or in a hidden tab, and provides pause, replay, seeking, fullscreen and a text walkthrough. Reduced-motion visitors see the poster and can explicitly choose Play. It uses fictional sample data and sends nothing.
+
+To regenerate the film, install dependencies with `npm ci`, ensure FFmpeg is available, then run `npm run render:film`. The deterministic Canvas renderer is `scripts/render-flow-demo.cjs`; fonts come from the existing Fontsource dependencies. Encoding uses H.264, yuv420p and fast-start metadata for website playback, with no audio track. `npm run render:film -- --stills` creates review frames in `.next/film-stills/` without rendering the video. Rendering is an authoring step; ordinary website builds use the committed video and do not need FFmpeg.
 
 The gallery uses the supplied Tilted Grid Hero with Flow Plumbing illustrations and two explicitly labelled illustrative concepts (bookings and operations) and a fictional architectural website concept, not completed client work. No live-app link is offered.
 
