@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  * tile is one animation, so its strips can never drift apart or show
  * different images. Only a tile's delay differs, and that sets where on
  * the arc it sits. The band is transform-only on the compositor; the fade
- * is a static mask over it.
+ * is a static overlay over it.
  *
  * The only JS is a ResizeObserver that sizes the loop, and a handler that
  * hands a tile its next image each time it wraps, out of sight.
@@ -123,6 +123,8 @@ export type TiltedGridHeroProps = {
   curve?: number;
   /** Width of the fade at each end, as a percentage of the hero's width. @default 12 */
   fade?: number;
+  /** Match the surrounding section when fading the moving row at its edges. */
+  fadeColor?: string;
   /** Content rendered above the band. */
   children?: React.ReactNode;
   /** Styling for the complete screen surface, shared across its curved facets. */
@@ -140,6 +142,7 @@ export function TiltedGridHero({
   axis = 56,
   curve = 80,
   fade = 12,
+  fadeColor = 'var(--color-background, #eaeae8)',
   children,
   tileClassName,
   className,
@@ -225,16 +228,16 @@ export function TiltedGridHero({
     (paused === undefined ? `@media(prefers-reduced-motion:reduce){.${tile}{animation-play-state:paused!important}}` : '');
 
   const share = aspectRatio / SLICES;
-  const mask = `linear-gradient(90deg,transparent,#000 ${fade}%,#000 ${
-    100 - fade
-  }%,transparent)`;
+  // Keep the fade outside the perspective layer. Masking that layer can
+  // expose a bright compositor seam at its right boundary on desktop GPUs.
+  const edgeFade = `linear-gradient(90deg,${fadeColor} 0,${fadeColor} 2px,transparent ${fade}%,transparent ${100 - fade}%,${fadeColor} calc(100% - 2px),${fadeColor} 100%)`;
 
   return (
     <div
       ref={ref}
       className={cn("relative overflow-hidden", className)}
       {...props}
-      style={{ containerType: "size", ...props.style }}
+      style={{ containerType: "size", isolation: 'isolate', ...props.style }}
     >
       <style>{css}</style>
 
@@ -250,8 +253,6 @@ export function TiltedGridHero({
           // grow evenly above and below it as they come toward the viewer.
           perspective: `${+(r * CAMERA).toFixed(3)}cqw`,
           perspectiveOrigin: `50% ${axis}%`,
-          maskImage: mask,
-          WebkitMaskImage: mask,
         }}
       >
         {Array.from({ length: columns }, (_, t) => {
@@ -333,6 +334,13 @@ export function TiltedGridHero({
           );
         })}
       </div>
+
+      {fade > 0 && <div
+        aria-hidden
+        data-gallery-edge-fade
+        className="pointer-events-none absolute -inset-px"
+        style={{ background: edgeFade }}
+      />}
 
       {children}
     </div>

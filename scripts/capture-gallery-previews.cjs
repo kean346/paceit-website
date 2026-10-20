@@ -1,7 +1,9 @@
 #!/usr/bin/env node
-/** Decorative carousel concepts only. Does not capture or modify the lower demos.
- * The travel composition is illustrative, with original generated safari artwork;
- * it is not a capture of the client's live website.
+/** Render the gallery-only analytics concept; keep the three lower demos intact.
+ * Travel is captured from the real kean346/Safamilytravel website (elephant scene).
+ * Source: 7455ab858e809442c31705f6e3cc76736c4fe24d.
+ * To refresh it, run that checkout locally, then set TRAVEL_CAPTURE_URL to its URL.
+ * Without that URL, the checked-in travel capture is kept unchanged.
  */
 const fs = require('node:fs');
 const path = require('node:path');
@@ -13,12 +15,6 @@ const data = (file, mime) => `data:${mime};base64,${fs.readFileSync(file).toStri
 const font = data(path.join(root, 'node_modules/@fontsource/plus-jakarta-sans/files/plus-jakarta-sans-latin-400-normal.woff2'), 'font/woff2');
 const numbers = data(path.join(root, 'node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-500-normal.woff2'), 'font/woff2');
 const base = `@font-face{font-family:Jakarta;src:url('${font}')}@font-face{font-family:Numbers;src:url('${numbers}')}*{box-sizing:border-box}body{margin:0;width:1920px;height:1080px;font-family:Jakarta,sans-serif}h1,h2,h3,p{margin:0}button{font:inherit}.numbers{font-family:Numbers,sans-serif}`;
-function travel() {
-  const photo = data(path.join(work, 'sa-family-travel-safari.webp'), 'image/webp');
-  return `<style>${base}
-  body{color:#fff;background:#f7f5ef}.hero{height:885px;background:linear-gradient(90deg,#101d19b8,#101d1940 70%),url('${photo}') center/cover;position:relative}nav{height:140px;display:flex;align-items:center;justify-content:space-between;padding:0 115px;border-bottom:1px solid #ffffff35}.brand{display:flex;gap:17px;align-items:center;font-size:24px;letter-spacing:1px;font-weight:bold}.brand svg{width:49px;height:49px}.links{display:flex;align-items:center;gap:43px;font-size:17px}.contact{padding:19px 31px;background:#d4a526;border-radius:40px;color:#18221b}.copy{padding:135px 0 0 148px}.eyebrow{text-transform:uppercase;font-size:16px;letter-spacing:4px;color:#e6d59d;margin-bottom:28px}h1{font-family:Georgia,serif;font-weight:400;letter-spacing:-3px;font-size:104px;line-height:1.07}.description{max-width:520px;font-size:21px;line-height:1.75;color:#e8ece5;margin-top:29px}.explore{display:inline-flex;align-items:center;gap:35px;margin-top:33px;background:#e7dcba;color:#25372e;border-radius:3px;padding:20px 28px;font-size:17px}.hero-foot{position:absolute;bottom:32px;left:148px;right:115px;display:flex;justify-content:space-between;font-size:13px;color:#e9ede2;letter-spacing:1.5px}.bottom{height:195px;display:flex;align-items:center;padding:0 148px;gap:90px;color:#293e30}.bottom>span{font-size:13px;letter-spacing:3px;color:#7d856f}.bottom strong{display:block;font-family:Georgia,serif;font-size:29px;font-weight:400;margin-bottom:10px}.bottom p{font-size:14px;color:#6e786b}.bottom i{height:57px;width:1px;background:#d8ddd1}.concept{margin-left:auto;font-size:12px;letter-spacing:1px;color:#7d856f}
-  </style><main><div class="hero"><nav><div class="brand"><svg viewBox="0 0 60 60" fill="none" stroke="#d4a526" stroke-width="2"><circle cx="30" cy="30" r="28"/><path d="M14 41h32M30 40V24m-15 1c0-15 30-15 30 0-5 6-25 6-30 0Z"/></svg>SA FAMILY TRAVEL</div><div class="links"><span>Travel Options</span><span>Our Routes</span><span>About Us</span><span>Stories</span><span class="contact">CONTACT US ↗</span></div></nav><div class="copy"><p class="eyebrow">South Africa. Together.</p><h1>Wild places.<br/>Lifelong memories.</h1><p class="description">Extraordinary family journeys, thoughtfully planned. Discover the Africa you'll always carry with you.</p><div class="explore">Explore your next adventure <span>↗</span></div></div><div class="hero-foot"><span>01 — A CLOSER CONNECTION TO THE WILD</span><span>CURATED JOURNEYS / SOUTHERN AFRICA</span></div></div><div class="bottom"><span>TRAVEL<br/>WITH PURPOSE</span><div><strong>Made for your family.</strong><p>Personal journeys. Local knowledge. Room to explore.</p></div><i></i><div><strong>Africa, at your pace.</strong><p>From the first idea to the last unforgettable sunset.</p></div><small class="concept">ILLUSTRATIVE PREVIEW</small></div></main>`;
-}
 function analytics() {
   const bars = [38,52,47,67,57,76,64,85,71,94,80,100].map((h,i)=>`<div class="bar" style="height:${h}%;opacity:${.45+i*.045}"></div>`).join('');
   return `<style>${base}
@@ -28,7 +24,7 @@ function analytics() {
 async function capture() {
  const browser = await chromium.launch({executablePath: process.env.PACEIT_CHROMIUM_PATH || '/usr/bin/chromium', headless:true, args:['--no-sandbox']});
  try {
-  for(const [name,html] of [['sa-family-travel',travel()],['analytics',analytics()]]) {
+  for(const [name,html] of [['analytics',analytics()]]) {
    const page = await browser.newPage({viewport:{width:1920,height:1080},deviceScaleFactor:1});
    const sharpArrows = html.replaceAll('↗', '<svg aria-hidden="true" viewBox="0 0 24 24" style="display:inline-block;width:18px;height:18px;vertical-align:middle" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12"/></svg>');
    await page.setContent(`<!doctype html><html><head><meta charset="utf-8"/></head><body>${sharpArrows}</body></html>`);
@@ -36,6 +32,21 @@ async function capture() {
    const png = await page.screenshot({type:'png'});
    await sharp(png).webp({quality:96}).toFile(path.join(work,`${name}-preview.webp`));
    console.log(`Captured ${name} at 1920 × 1080.`);
+   await page.close();
+  }
+  if (process.env.TRAVEL_CAPTURE_URL) {
+   const page = await browser.newPage({viewport:{width:1920,height:1080},reducedMotion:'reduce'});
+   await page.goto(process.env.TRAVEL_CAPTURE_URL, {waitUntil:'load'});
+   await page.locator('.hero-scene [data-media-state="photo"]').waitFor();
+   const photo = page.locator('.hero-scene .editorial-photo.loaded');
+   const alt = await photo.getAttribute('alt');
+   if (!alt?.includes('elephants') || !alt.includes('pink')) throw new Error('Expected the original elephant photograph under a pink sky.');
+   await photo.evaluate(image => image.decode());
+   await page.evaluate(()=>document.fonts.ready);
+   await page.addStyleTag({content:'nextjs-portal{display:none!important}'});
+   const png = await page.screenshot({type:'png'});
+   await sharp(png).webp({quality:96}).toFile(path.join(work,'sa-family-travel-elephants.webp'));
+   console.log('Captured the real SA Family Travel elephant homepage at 1920 × 1080.');
    await page.close();
   }
  } finally {await browser.close();}

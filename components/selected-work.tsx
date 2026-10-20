@@ -39,7 +39,7 @@ const projects = [
 // High-resolution local previews; repeat in order without adding lower demo tabs.
 const galleryImages = [
   { src: '/work/flow-plumbing-preview.webp', alt: 'Flow Plumbing quote and follow-up dashboard' },
-  { src: '/work/sa-family-travel-preview.webp', alt: 'Illustrative SA Family Travel luxury safari website preview' },
+  { src: '/work/sa-family-travel-elephants.webp', alt: 'SA Family Travel website with elephants beneath a pink sky and the heading Wild places. Wonderful memories.' },
   { src: '/work/analytics-preview.webp', alt: 'Northstar dark analytics dashboard concept with revenue and acquisition charts' },
   { src: '/work/daylight-preview.webp', alt: 'Daylight minimal booking application with a weekly calendar' },
   { src: '/work/relay-preview.webp', alt: 'Relay team workspace with a clear project board' },
@@ -83,7 +83,7 @@ export function SelectedWork() {
   return <div className="work-collection">
     <div className="work-reel-wrap" ref={reel}>
       <TiltedGridHero id="work-gallery" images={galleryImages} speed={10} gap={10}
-        tileHeight={40} curve={65} fade={6} axis={57} paused={!playing}
+        tileHeight={40} curve={65} fade={0} axis={57} paused={!playing}
         tileClassName="border border-white/20 shadow-2xl rounded-2xl bg-neutral-900 p-1 work-screen-surface" className={`work-reel ${playing ? 'gallery-playing' : 'gallery-paused'}`}>
         <div className="work-reel-content">
           <div className="work-intro">
