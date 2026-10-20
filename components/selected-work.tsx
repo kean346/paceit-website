@@ -6,7 +6,7 @@ import { TiltedGridHero } from '@/components/ui/tilted-grid-hero';
 import { QuoteWalkthrough } from '@/components/quote-walkthrough';
 import { DaylightDemo, RelayDemo } from '@/components/work-demos';
 
-// Replace these images and descriptions with real project screenshots as the collection grows.
+// These three demos are independent from the decorative carousel above.
 const projects = [
   {
     id: 'flow', name: 'Flow Plumbing', type: 'Product demo', category: 'Quotes & follow-ups',
@@ -36,7 +36,14 @@ const projects = [
     tags: ['Product concept', 'Team workflows', 'Sample data'],
   },
 ];
-const galleryImages = projects.map(project => ({ src: project.image, alt: project.alt }));
+// High-resolution local previews; repeat in order without adding lower demo tabs.
+const galleryImages = [
+  { src: '/work/flow-plumbing-preview.webp', alt: 'Flow Plumbing quote and follow-up dashboard' },
+  { src: '/work/sa-family-travel-preview.webp', alt: 'Illustrative SA Family Travel luxury safari website preview' },
+  { src: '/work/analytics-preview.webp', alt: 'Northstar dark analytics dashboard concept with revenue and acquisition charts' },
+  { src: '/work/daylight-preview.webp', alt: 'Daylight minimal booking application with a weekly calendar' },
+  { src: '/work/relay-preview.webp', alt: 'Relay team workspace with a clear project board' },
+];
 
 export function SelectedWork() {
   const [active, setActive] = useState(0);
@@ -81,17 +88,17 @@ export function SelectedWork() {
 
   return <div className="work-collection">
     <div className="work-reel-wrap" ref={reel}>
-      <TiltedGridHero images={galleryImages} className={`work-reel ${playing ? 'gallery-playing' : 'gallery-paused'}`}>
+      <TiltedGridHero images={galleryImages} speed={10} gap={10}
+        tileClassName="border border-white/20 shadow-2xl rounded-2xl bg-neutral-900 p-1 work-screen-surface" className={`work-reel ${playing ? 'gallery-playing' : 'gallery-paused'}`}>
         <div className="work-reel-content">
           <div className="work-intro">
             <p className="eyebrow work-eyebrow">01 / Selected work</p>
-            <h2 id="work-title">Good ideas.<br /><span className="muted-heading">Made useful.</span></h2>
+            <h2 id="work-title">Good Ideas<br /><span className="muted-heading">Made Useful</span></h2>
           </div>
-          <p className="work-reel-copy">Websites and software, designed around the work.<br />Explore a project or try a concept below.</p>
+          <p className="work-reel-copy">Thoughtful websites. Clearer ways to work.<br />A few possibilities, brought to life.</p>
         </div>
       </TiltedGridHero>
       <div className="section-shell work-reel-toolbar">
-        <a href="#dashboard-example" onClick={() => setActive(0)}>Watch the Flow Plumbing demo <ArrowDownRight size={16} /></a>
         {reduced ? <span className="work-motion-note">A still view, at your pace.</span> :
           <button type="button" className="work-motion-toggle" aria-label={paused ? 'Resume project gallery' : 'Pause project gallery'} aria-pressed={paused} onClick={() => setPaused(value => !value)}>
             {paused ? <Play size={13} /> : <Pause size={13} />}<span>{paused ? 'Resume' : 'Pause'} gallery</span>
@@ -99,22 +106,24 @@ export function SelectedWork() {
       </div>
     </div>
 
-    <div className="section-shell work-projects" role="tablist" aria-label="Explore projects and design concepts">
-      {projects.map((item, index) => <button key={item.id} type="button" role="tab" id={`work-tab-${item.id}`}
-        ref={element => { tabs.current[index] = element; }} aria-selected={active === index} aria-controls="work-project-panel"
-        tabIndex={active === index ? 0 : -1} className="work-project-tab" onClick={() => setActive(index)} onKeyDown={event => moveTab(event, index)}>
-        <span className="work-project-meta"><span className="mono">0{index + 1}</span><span>{item.type}</span></span>
-        <span className="work-project-name"><strong>{item.name}</strong><ArrowUpRight size={18} /></span>
-        <span className="work-project-category">{item.category}</span>
-      </button>)}
-    </div>
-
     <div className="section-shell work-feature" id="dashboard-example">
-      <div id="work-project-panel" role="tabpanel" aria-labelledby={`work-tab-${project.id}`} tabIndex={0}>
-        <div className="work-feature-head">
-          <div><p className="eyebrow work-feature-kicker">{project.type} / {project.category}</p><h3>{project.title}</h3></div>
-          <p className="work-feature-description">{project.description}</p>
+      <div className="work-feature-head">
+        <div><p className="eyebrow work-feature-kicker">{project.type} / {project.category}</p><h3>{project.title}</h3></div>
+        <p className="work-feature-description">{project.description}</p>
+      </div>
+      <div className="work-demo-navigation">
+        <a className="work-demo-watch" href="#work-project-panel" onClick={() => setActive(0)}>Watch the Flow Plumbing demo <ArrowDownRight size={16} /></a>
+        <div className="work-projects" role="tablist" aria-label="Explore projects and design concepts">
+          {projects.map((item, index) => <button key={item.id} type="button" role="tab" id={`work-tab-${item.id}`}
+            ref={element => { tabs.current[index] = element; }} aria-selected={active === index} aria-controls="work-project-panel"
+            tabIndex={active === index ? 0 : -1} className="work-project-tab" onClick={() => setActive(index)} onKeyDown={event => moveTab(event, index)}>
+            <span className="work-project-meta"><span className="mono">0{index + 1}</span><span>{item.type}</span></span>
+            <span className="work-project-name"><strong>{item.name}</strong><ArrowUpRight size={18} /></span>
+            <span className="work-project-category">{item.category}</span>
+          </button>)}
         </div>
+      </div>
+      <div id="work-project-panel" role="tabpanel" aria-labelledby={`work-tab-${project.id}`} tabIndex={0}>
         {project.id === 'flow' ? <QuoteWalkthrough /> : project.id === 'daylight' ? <DaylightDemo /> : project.id === 'relay' ? <RelayDemo /> : <figure className={`work-concept-preview work-concept-${project.id}`}>
           <img src={project.image} alt={project.alt} width={1600} height={1000} />
           <figcaption><span>{project.name} <i /> Design concept</span><span>Fictional business · Illustrative preview</span></figcaption>

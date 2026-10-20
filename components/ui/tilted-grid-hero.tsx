@@ -123,6 +123,8 @@ export type TiltedGridHeroProps = {
   fade?: number;
   /** Content rendered above the band. */
   children?: React.ReactNode;
+  /** Styling for the complete screen surface, shared across its curved facets. */
+  tileClassName?: string;
   className?: string;
 };
 
@@ -136,6 +138,7 @@ export function TiltedGridHero({
   curve = 80,
   fade = 12,
   children,
+  tileClassName,
   className,
   ...props
 }: React.ComponentProps<"div"> & TiltedGridHeroProps) {
@@ -229,6 +232,9 @@ export function TiltedGridHero({
       <style>{css}</style>
 
       <div
+        // A changed tile count must restart the row together. Otherwise newly
+        // mounted tiles have a different animation clock and can overlap on resize.
+        key={columns}
         aria-hidden
         className="pointer-events-none absolute inset-0 transition-opacity duration-500"
         style={{
@@ -272,9 +278,10 @@ export function TiltedGridHero({
                 <div
                   key={k}
                   className={cn(
-                    "absolute top-0 overflow-hidden bg-muted",
-                    k === 0 && "rounded-l-lg",
-                    k === SLICES - 1 && "rounded-r-lg",
+                    "absolute top-0 overflow-hidden",
+                    !tileClassName && "bg-muted",
+                    k === 0 && (tileClassName ? "rounded-l-2xl" : "rounded-l-lg"),
+                    k === SLICES - 1 && (tileClassName ? "rounded-r-2xl" : "rounded-r-lg"),
                   )}
                   style={{
                     // Every strip starts at the tile's centre and is turned
@@ -292,17 +299,22 @@ export function TiltedGridHero({
                   }}
                 >
                   {img ? (
-                    <img
-                      src={img.src}
-                      alt={k === 0 ? (img.alt ?? "") : ""}
-                      draggable={false}
-                      className="absolute top-0 max-w-none object-cover"
+                    <div
+                      className={cn("absolute top-0", tileClassName)}
                       style={{
                         left: u(-k * share),
                         width: u(aspectRatio),
                         height: u(1),
                       }}
-                    />
+                    >
+                      <img
+                        src={img.src}
+                        alt={k === 0 ? (img.alt ?? "") : ""}
+                        draggable={false}
+                        className="h-full w-full max-w-none object-cover"
+                        style={{ borderRadius: tileClassName ? 11 : undefined }}
+                      />
+                    </div>
                   ) : null}
                 </div>
               ))}
