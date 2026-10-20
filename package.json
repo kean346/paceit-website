@@ -8,7 +8,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "render:film": "node scripts/render-flow-demo.cjs",
-    "render:work": "node scripts/capture-work-previews.cjs"
+    "render:work": "node scripts/capture-work-previews.cjs",
+    "test:gallery": "node tests/curved-gallery-regression.cjs"
   },
   "dependencies": {
     "@fontsource/plus-jakarta-sans": "5.3.0",
