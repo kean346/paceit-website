@@ -33,7 +33,7 @@ No SMTP credentials were present in the execution environment. The code and mock
 - The submit button prevents duplicate in-flight submissions. A stable SMTP Message-ID helps identify identical retries, but SMTP does not provide guaranteed idempotent delivery.
 - Success appears only after SMTP accepts the intended recipient. Errors preserve the visitor's input; the page never redirects to an email app.
 
-Review the privacy draft before publishing it: direct enquiries now pass through the hosting provider, Brevo and the mailbox, even though the website has no enquiry database, analytics or persistent browser storage.
+The published `/privacy` notice describes processing through the hosting provider, Brevo and the mailbox. The website still has no enquiry database, analytics or persistent browser storage. Follow the [privacy operations checklist](privacy-operations.md) for retention, requests and provider arrangements.
 
 ## Verification
 

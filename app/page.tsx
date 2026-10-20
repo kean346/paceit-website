@@ -1,6 +1,7 @@
 import { ArrowUpRight, ArrowDown, Code2, Workflow, PanelsTopLeft, Check, CornerDownRight } from 'lucide-react';
 import { Navigation, Reveal, ContactForm } from '@/components/site-interactions';
 import { SelectedWork } from '@/components/selected-work';
+import { SiteFooter } from '@/components/site-footer';
 import type { Metadata } from 'next';
 import { businessSchema } from '@/lib/site';
 
@@ -45,6 +46,6 @@ export default function Home() {
 
    <section className="contact-section" id="contact"><div className="section-shell contact-grid"><div><p className="eyebrow section-index">05 / YOUR NEXT MOVE</p><h2>What could<br/>work <span>better?</span></h2><p>A repetitive task. A messy process.<br/>An idea you’re ready to explore.<br/>That’s a good place to start.</p><ArrowUpRight size={62} strokeWidth={1} className="contact-arrow"/></div><ContactForm /></div></section>
   </main>
-  <footer className="section-shell footer"><a className="wordmark" href="#home" aria-label="paceIT home">pace<span>IT.</span></a><p>Software for what’s next.</p><div><span>© {new Date().getFullYear()} paceIT</span><a href="#home">Back to top <ArrowUpRight size={14}/></a></div></footer>
+  <SiteFooter />
  </>;
 }

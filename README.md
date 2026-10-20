@@ -26,7 +26,7 @@ The primary canonical URL is `https://paceit.co.za`, confirmed by the owner. `NE
 
 ## Audit and verification
 
-[SEO, performance, security and legal audit](docs/website-audit.md). Proposed [legal pages](docs/legal-drafts.md) and [organic content architecture](docs/organic-content-plan.md) remain unpublished pending the owner's approval. Existing homepage copy and design are preserved, apart from the explicitly requested direct enquiry flow.
+[SEO, performance, security and legal audit](docs/website-audit.md). The owner-confirmed Privacy Policy and Terms are available at `/privacy` and `/terms`; see [the legal implementation record](docs/legal-drafts.md) and [operational follow-up](docs/privacy-operations.md). The proposed [organic content architecture](docs/organic-content-plan.md) remains unpublished pending approval. Existing marketing copy and design are preserved; approved changes are the direct enquiry flow and small legal links.
 
 ```sh
 npm run test:enquiry  # Mock SMTP only; no email sent

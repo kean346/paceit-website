@@ -37,6 +37,7 @@ const canonical = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://paceit.co
     const sitemap = await context.request.get(base + '/sitemap.xml');
     assert.equal(sitemap.status(), 200);
     assert((await sitemap.text()).includes(`<loc>${canonical}/</loc>`));
+    for (const path of ['/privacy', '/terms']) assert((await sitemap.text()).includes(`<loc>${canonical}${path}</loc>`));
     assert.doesNotMatch(await sitemap.text(), /\/api\/|#|<lastmod>/);
     const robots = await context.request.get(base + '/robots.txt');
     assert.match(await robots.text(), /Allow: \/\nDisallow: \/api\//);
@@ -113,6 +114,40 @@ const canonical = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://paceit.co
     assert.equal(await page.evaluate(() => localStorage.length + sessionStorage.length), 0);
     assert.deepEqual(errors, []);
     console.log('PASS: on-site success/error states, failed-message preservation, no redirect, no cookies/storage or CSP errors');
+
+    assert.equal(await form.getByRole('link', { name: 'Privacy Policy' }).getAttribute('href'), '/privacy');
+    for (const [name, path] of [['Privacy', '/privacy'], ['Terms', '/terms']]) assert.equal(await page.locator('footer').getByRole('link', { name, exact: true }).getAttribute('href'), path);
+    const legal = await context.newPage();
+    legal.on('pageerror', error => errors.push(error.message));
+    for (const [path, title] of [['/privacy', 'Privacy Policy'], ['/terms', 'Terms of Website Use']]) {
+      const response = await legal.goto(base + path, { waitUntil: 'networkidle' });
+      assert.equal(response.status(), 200);
+      assert.equal(await legal.locator('h1').count(), 1);
+      assert.equal(await legal.locator('h1').textContent(), title);
+      assert.equal(await legal.title(), `${title} | paceIT`);
+      assert((await legal.locator('meta[name="description"]').getAttribute('content')).length < 160);
+      assert.equal(await legal.locator('link[rel="canonical"]').getAttribute('href'), canonical + path);
+      assert.equal(await legal.locator('meta[property="og:url"]').getAttribute('content'), canonical + path);
+      assert.equal(await legal.locator('meta[name="twitter:title"]').getAttribute('content'), `${title} | paceIT`);
+      assert.match(await legal.locator('main').innerText(), /Kean Maan/);
+      assert.doesNotMatch(await legal.locator('main').innerText(), /\[publication date\]|\[full legal name|\[confirmed|Sean \/ Kean|draft for owner/i);
+      assert.equal(await legal.locator('video, canvas').count(), 0);
+      assert(await legal.locator('.legal-contents a').evaluateAll(links => links.every(link => document.querySelector(link.hash))));
+      for (const width of [320, 390, 640, 768, 1440]) {
+        await legal.setViewportSize({ width, height: 900 });
+        assert(await legal.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${path} overflow at ${width}px`);
+      }
+      await legal.setViewportSize({ width: 390, height: 844 });
+      await legal.getByRole('button', { name: 'Open navigation' }).click();
+      await legal.waitForFunction(() => document.querySelector('.menu-button').getAttribute('aria-expanded') === 'true');
+      assert.equal(await legal.locator('#main-navigation').getByRole('link', { name: 'Work', exact: true }).getAttribute('href'), '/#work');
+      assert.equal(await legal.locator('#main-navigation').getByRole('link', { name: 'Contact', exact: true }).getAttribute('href'), '/#contact');
+      assert.equal(await legal.locator('footer').getByRole('link', { name: 'Back to top' }).getAttribute('href'), '#top');
+      assert.equal(await legal.locator('#top').count(), 1);
+    }
+    await legal.close();
+    assert.deepEqual(errors, []);
+    console.log('PASS: legal pages, unique metadata/canonicals, sitemap/footer/form links and mobile navigation');
     await context.close();
 
     const fallback = await browser.newContext({ viewport: { width: 390, height: 844 } });

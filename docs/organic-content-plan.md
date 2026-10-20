@@ -1,6 +1,6 @@
 # Proposed organic content architecture — not published
 
-The homepage has useful, crawlable service descriptions, one H1, section navigation and an enquiry destination. It is currently one indexable page. Fragment links improve navigation but do not create separate search landing pages or independent search authority. New visible content needs owner approval.
+The homepage has useful, crawlable service descriptions, one H1, section navigation and an enquiry destination. Privacy and Terms pages are now published with the owner's details. The homepage remains the only service landing page. Fragment links improve navigation but do not create separate search landing pages or independent search authority. New marketing content needs owner approval.
 
 ## Candidate pages for approval
 
