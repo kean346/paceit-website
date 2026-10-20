@@ -1,10 +1,14 @@
 'use client';
 
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import dynamic from 'next/dynamic';
 import { ArrowDownRight, ArrowUpRight, Pause, Play } from 'lucide-react';
 import { TiltedGridHero } from '@/components/ui/tilted-grid-hero';
 import { QuoteWalkthrough } from '@/components/quote-walkthrough';
-import { DaylightDemo, RelayDemo } from '@/components/work-demos';
+
+const demoPlaceholder = () => <div className="work-demo" aria-busy="true" />;
+const DaylightDemo = dynamic(() => import('@/components/work-demos').then(module => module.DaylightDemo), { loading: demoPlaceholder });
+const RelayDemo = dynamic(() => import('@/components/work-demos').then(module => module.RelayDemo), { loading: demoPlaceholder });
 
 // These three demos are independent from the decorative carousel above.
 const projects = [
@@ -94,7 +98,7 @@ export function SelectedWork() {
         </div>
       </TiltedGridHero>
       <div className="section-shell work-reel-toolbar">
-        <button type="button" className="work-motion-toggle" aria-label={`${playbackAction} project gallery`} aria-controls="work-gallery" onClick={() => setPaused(value => !value)}>
+        <button type="button" className="work-motion-toggle" aria-label={`${playbackAction} gallery`} aria-controls="work-gallery" onClick={() => setPaused(value => !value)}>
           {paused ? <Play size={13} /> : <Pause size={13} />}<span>{playbackAction} gallery</span>
         </button>
       </div>
@@ -119,7 +123,7 @@ export function SelectedWork() {
       </div>
       <div id="work-project-panel" role="tabpanel" aria-labelledby={`work-tab-${project.id}`} tabIndex={0}>
         {project.id === 'flow' ? <QuoteWalkthrough /> : project.id === 'daylight' ? <DaylightDemo /> : project.id === 'relay' ? <RelayDemo /> : <figure className={`work-concept-preview work-concept-${project.id}`}>
-          <img src={project.image} alt={project.alt} width={1600} height={1000} />
+          <img src={project.image} alt={project.alt} width={1600} height={900} loading="lazy" decoding="async" />
           <figcaption><span>{project.name} <i /> Design concept</span><span>Fictional business · Illustrative preview</span></figcaption>
         </figure>}
         <div className="work-project-notes">

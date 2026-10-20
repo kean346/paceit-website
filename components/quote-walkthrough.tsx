@@ -11,6 +11,7 @@ export function QuoteWalkthrough() {
   const root = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const [visible, setVisible] = useState(false);
+  const [loadMedia, setLoadMedia] = useState(false);
   const [tabVisible, setTabVisible] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(true);
   const [manualPlay, setManualPlay] = useState(false);
@@ -43,6 +44,17 @@ export function QuoteWalkthrough() {
   }, []);
 
   useEffect(() => {
+    const element = root.current;
+    if (!element) return;
+    if (!('IntersectionObserver' in window)) { setLoadMedia(true); return; }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setLoadMedia(true); observer.disconnect(); }
+    }, { rootMargin: '300px' });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     const update = () => setTabVisible(!document.hidden);
     update();
     document.addEventListener('visibilitychange', update);
@@ -51,7 +63,7 @@ export function QuoteWalkthrough() {
     return () => document.removeEventListener('visibilitychange', update);
   }, []);
 
-  const shouldPlay = visible && tabVisible && !userPaused && !ended && !failed && (!reducedMotion || manualPlay);
+  const shouldPlay = loadMedia && visible && tabVisible && !userPaused && !ended && !failed && (!reducedMotion || manualPlay);
   useEffect(() => {
     const element = video.current;
     if (!element) return;
@@ -70,10 +82,11 @@ export function QuoteWalkthrough() {
     if (!element) return;
     if (fromStart || element.ended) { element.currentTime = 0; setTime(0); }
     setEnded(false);
+    setLoadMedia(true);
     setManualPlay(true);
     setUserPaused(false);
     // Start in the button's user gesture as well as the visibility effect.
-    void element.play().catch((error: DOMException) => {
+    if (element.getAttribute('src')) void element.play().catch((error: DOMException) => {
       if (error.name !== 'AbortError') setUserPaused(true);
     });
   }
@@ -108,8 +121,8 @@ export function QuoteWalkthrough() {
         <span className="product-film-disclaimer">Demo · Fictional business</span>
       </div>
       <div className="product-film-screen">
-        <video ref={video} className="product-film-video" src={filmSource} poster={filmPoster}
-          preload="metadata" muted playsInline
+        <video ref={video} className="product-film-video" src={loadMedia && (!reducedMotion || manualPlay) ? filmSource : undefined} poster={loadMedia ? filmPoster : undefined}
+          preload="none" muted playsInline
           aria-label="A twenty-second silent demonstration of Flow Plumbing" aria-describedby="flow-film-description"
           onLoadedMetadata={(event) => {
             const length = event.currentTarget.duration;

@@ -1,9 +1,14 @@
-import { ArrowUpRight, ArrowDown, ArrowRight, Code2, Workflow, PanelsTopLeft, Check, CornerDownRight } from 'lucide-react';
+import { ArrowUpRight, ArrowDown, Code2, Workflow, PanelsTopLeft, Check, CornerDownRight } from 'lucide-react';
 import { Navigation, Reveal, ContactForm } from '@/components/site-interactions';
 import { SelectedWork } from '@/components/selected-work';
+import type { Metadata } from 'next';
+import { businessSchema } from '@/lib/site';
+
+export const metadata: Metadata = { alternates: { canonical: '/' } };
 
 export default function Home() {
  return <>
+  <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessSchema()).replace(/</g, '\\u003c') }} />
   <a className="skip-link" href="#main">Skip to content</a>
   <Navigation />
   <main id="main">
@@ -11,7 +16,7 @@ export default function Home() {
     <div className="hero-topline mono"><span><i className="signal-dot" /> INDEPENDENT TECHNOLOGY STUDIO</span><span>PRETORIA, SOUTH AFRICA ↗</span></div>
     <div className="hero-grid">
      <div className="hero-copy"><p className="eyebrow">A little less friction. A lot more forward.</p><h1 id="hero-title">Good business.<br/>Better <span className="accent-word">systems<svg viewBox="0 0 500 20" aria-hidden="true"><path d="M3 13 Q240 -2 497 9" /></svg></span>.</h1><p className="hero-description">Custom software and automation that give you back time, clarity and room to grow.</p><div className="hero-actions"><a className="button primary" href="#contact">Discuss a project <ArrowUpRight size={18}/></a><a className="text-link" href="#work">See selected work <ArrowDown size={16}/></a></div></div>
-     <div className="system-art" aria-label="An illustration of a quote moving from a request to an organised workflow">
+     <div className="system-art" role="img" aria-label="An illustration of a quote moving from a request to an organised workflow">
       <div className="art-grid"/><div className="orbit orbit-one"/><div className="orbit orbit-two"/>
       <div className="art-caption mono">SMALL CONNECTIONS.<br/>A BIG DIFFERENCE.</div>
       <div className="flow-note note-one"><span className="note-symbol"><PanelsTopLeft size={17}/></span><div><small>IT STARTS WITH A REQUEST</small><strong>“Can you send me a quote?”</strong></div><span className="note-dot"/></div>
@@ -30,7 +35,7 @@ export default function Home() {
 
    <section className="services-section section-shell" id="services" aria-labelledby="services-title"><Reveal><div className="section-heading"><div><p className="eyebrow section-index">02 / WHAT WE CAN BUILD</p><h2 id="services-title">Your problem.<br/><span className="muted-heading">Our starting point.</span></h2></div><p>A useful tool should fit your business.<br/>Let’s work out what yours needs.</p></div></Reveal>
     <div className="service-list">
-     {[{n:'01',icon:Code2,title:'Software that fits.',text:'Custom web apps, customer portals and internal tools that make the day-to-day easier.',tags:'WEB APPS / PORTALS / WEBSITES'}, {n:'02',icon:Workflow,title:'Work that takes care of itself.',text:'Connect your tools, cut repeat admin and keep the next step moving.',tags:'AUTOMATION / FOLLOW-UPS / INTEGRATIONS'}, {n:'03',icon:PanelsTopLeft,title:'A clearer picture.',text:'Bring information together in useful dashboards. Add AI where it genuinely helps.',tags:'DASHBOARDS / REPORTING / PRACTICAL AI'}].map(({n,icon:Icon,title,text,tags})=><Reveal key={n}><article className="service-row"><span className="service-number mono">{n}</span><div className="service-icon"><Icon size={25} strokeWidth={1.4}/></div><div className="service-copy"><h3>{title}</h3><p>{text}</p><span className="mono service-tags">{tags}</span></div><ArrowUpRight className="service-arrow" size={28} strokeWidth={1.3}/></article></Reveal>)}
+     {[{id:'custom-software',n:'01',icon:Code2,title:'Software that fits.',text:'Custom web apps, customer portals and internal tools that make the day-to-day easier.',tags:'WEB APPS / PORTALS / WEBSITES'}, {id:'business-automation',n:'02',icon:Workflow,title:'Work that takes care of itself.',text:'Connect your tools, cut repeat admin and keep the next step moving.',tags:'AUTOMATION / FOLLOW-UPS / INTEGRATIONS'}, {id:'dashboards-reporting',n:'03',icon:PanelsTopLeft,title:'A clearer picture.',text:'Bring information together in useful dashboards. Add AI where it genuinely helps.',tags:'DASHBOARDS / REPORTING / PRACTICAL AI'}].map(({id,n,icon:Icon,title,text,tags})=><Reveal key={n}><article className="service-row" id={id}><span className="service-number mono">{n}</span><div className="service-icon"><Icon size={25} strokeWidth={1.4}/></div><div className="service-copy"><h3>{title}</h3><p>{text}</p><span className="mono service-tags">{tags}</span></div><ArrowUpRight className="service-arrow" size={28} strokeWidth={1.3}/></article></Reveal>)}
     </div>
    </section>
 

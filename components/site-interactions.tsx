@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { ArrowUpRight, Check, Menu, X } from 'lucide-react';
+import { site } from '@/lib/site';
 
 export function Navigation() {
  const [open,setOpen]=useState(false);
@@ -12,9 +13,19 @@ export function Reveal({children}:{children:ReactNode}) {
  return <div ref={ref}>{children}</div>;
 }
 export function ContactForm(){
- const [message,setMessage]=useState('');const [brief,setBrief]=useState('');
- const contact=process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || 'info@paceit.co.za';
- function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();const data=new FormData(e.currentTarget);const text=`Project enquiry for paceIT\n\nName: ${String(data.get('name')).trim()}\nEmail: ${String(data.get('email')).trim()}\n\n${String(data.get('idea')).trim()}`;setBrief(text);
- window.location.href=`mailto:${contact}?subject=${encodeURIComponent('Let’s discuss a project')}&body=${encodeURIComponent(text)}`;setMessage('Email draft prepared. Review it and select Send in your email app.');}
- return <form className="contact-form" onSubmit={submit}><div className="form-heading"><span className="mono">START WITH A FEW WORDS</span><span className="small-arrow">↗</span></div><label htmlFor="name">Your name<input name="name" id="name" autoComplete="name" placeholder="Kean, for example" required maxLength={100}/></label><label htmlFor="email">Email address<input name="email" id="email" type="email" autoComplete="email" placeholder="you@yourbusiness.co.za" required maxLength={254}/></label><label htmlFor="idea">What would you like to make easier?<textarea name="idea" id="idea" placeholder="Tell us a little about the problem or idea…" required minLength={10} maxLength={4000} rows={3}/></label><button className="button primary" type="submit">Draft an enquiry <ArrowUpRight size={18}/></button><p className="form-note">Opens your email app with an enquiry to <a href={`mailto:${contact}`}>{contact}</a>. Review it and select Send there.</p><p className="form-status" role="status">{message&&<><Check size={14}/>{message}</>}</p>{brief&&<details className="brief-details"><summary>View your brief</summary><pre>{brief}</pre></details>}</form>;
+ const [message,setMessage]=useState('');const [sending,setSending]=useState(false);const [sent,setSent]=useState(false);
+ const inFlight=useRef(false);
+ async function submit(e:FormEvent<HTMLFormElement>){
+  e.preventDefault();if(inFlight.current)return;
+  const form=e.currentTarget;const data=new FormData(form);
+  inFlight.current=true;setSending(true);setSent(false);setMessage('');
+  try {
+   const response=await fetch('/api/enquiry',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:data.get('name'),email:data.get('email'),idea:data.get('idea'),website:data.get('website')}),signal:AbortSignal.timeout(25000)});
+   const result=await response.json();
+   if(!response.ok){setMessage(typeof result.message==='string'?result.message:`Your enquiry could not be sent. Please email ${site.email}.`);return;}
+   setSent(true);setMessage('Thank you. Your enquiry has been sent. We’ll be in touch.');form.reset();
+  } catch {setMessage(`Your enquiry could not be sent. Please try again or email ${site.email}.`);}
+  finally{inFlight.current=false;setSending(false);}
+ }
+ return <form className="contact-form" onSubmit={submit} aria-busy={sending}><div className="form-heading"><span className="mono">START WITH A FEW WORDS</span><span className="small-arrow">↗</span></div><label htmlFor="name">Your name<input name="name" id="name" autoComplete="name" placeholder="Kean, for example" required maxLength={100} disabled={sending}/></label><label htmlFor="email">Email address<input name="email" id="email" type="email" autoComplete="email" placeholder="you@yourbusiness.co.za" required maxLength={254} disabled={sending}/></label><label htmlFor="idea">What would you like to make easier?<textarea name="idea" id="idea" placeholder="Tell us a little about the problem or idea…" required minLength={10} maxLength={4000} rows={3} disabled={sending}/></label><div className="enquiry-trap" aria-hidden="true"><label htmlFor="website">Website<input name="website" id="website" type="text" tabIndex={-1} autoComplete="off"/></label></div><button className="button primary" type="submit" disabled={sending}>{sending?'Sending…':'Send enquiry'} <ArrowUpRight size={18}/></button><p className="form-note">Send your enquiry directly to <a href={`mailto:${site.email}`}>{site.email}</a>.</p><p className="form-status" role="status" aria-live="polite">{message&&<>{sent&&<Check size={14}/>}<span>{message}</span></>}</p></form>;
 }

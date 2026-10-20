@@ -1,6 +1,6 @@
 # paceIT website
 
-A compact Next.js / React / TypeScript website for paceIT. Tailwind CSS 4, shadcn-compatible component structure, locally bundled fonts, and static export. No database or server secrets are required.
+A compact Next.js / React / TypeScript website for paceIT. Tailwind CSS 4, shadcn-compatible component structure, locally bundled fonts, a prerendered homepage and a server-side Brevo SMTP enquiry endpoint. No database is required. Email credentials stay on the server.
 
 ## Run locally
 
@@ -16,11 +16,25 @@ npm run typecheck
 npm run build
 ```
 
-`next build` exports the site to `out/`. Vercel can import the repository with the Next.js preset. Keep this marketing repository separate from `paceit-plumbing-demo`.
+`next build` creates a standard Next.js production build. Run it locally with `npm start`, or deploy on Vercel with the Next.js preset and default output settings. Do not set a custom `out` output directory: static-only hosting cannot run the enquiry endpoint. Keep this marketing repository separate from `paceit-plumbing-demo`.
 
 ## Contact setup
 
-The enquiry form opens a pre-filled email to `info@paceit.co.za`, including the visitor's name, email address and project brief. Visitors review and send it in their email app. The address is also displayed as a direct email link. This works without setting an environment variable; `NEXT_PUBLIC_CONTACT_EMAIL` is an optional public recipient override and requires a rebuild/redeploy when changed. The website does not send or store enquiries itself. No analytics, cookies or form storage are implemented.
+The form sends directly from the website through Brevo SMTP to `info@paceit.co.za`, with the same address as From and the visitor's address as Reply-To. It never redirects to an email app. Configure `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER` and `SMTP_PASS` as server-only environment variables; see [the complete setup guide](docs/enquiry-setup.md) and `.env.example`. Success requires SMTP acceptance; failures preserve the visitor's input. No enquiries are stored in a website database. No analytics, cookies or persistent browser storage are implemented.
+
+The primary canonical URL is `https://paceit.co.za`, confirmed by the owner. `NEXT_PUBLIC_SITE_URL` can override this public origin. The generated sitemap, robots file, metadata and Organization/Service JSON-LD use the same origin. Vercel preview deployments are marked noindex.
+
+## Audit and verification
+
+[SEO, performance, security and legal audit](docs/website-audit.md). Proposed [legal pages](docs/legal-drafts.md) and [organic content architecture](docs/organic-content-plan.md) remain unpublished pending the owner's approval. Existing homepage copy and design are preserved, apart from the explicitly requested direct enquiry flow.
+
+```sh
+npm run test:enquiry  # Mock SMTP only; no email sent
+npm run test:gallery  # Real GPU regression checks
+npm run test:site     # Requires npm start on port 3004; mocks form requests
+```
+
+The browser checks use system Chromium by default; set `PACEIT_CHROMIUM_PATH` or `AUDIT_BASE_URL` as needed. The security headers are defined in `next.config.ts`. The homepage remains statically rendered; optional demos, gallery textures and film downloads are deferred until needed.
 
 ## Portfolio
 
@@ -30,7 +44,7 @@ The MP4 is `public/work/flow-plumbing-demo.mp4`; its final-frame poster is `publ
 
 To regenerate the film, install dependencies with `npm ci`, ensure FFmpeg is available, then run `npm run render:film`. The deterministic Canvas renderer is `scripts/render-flow-demo.cjs`; fonts come from the existing Fontsource dependencies. Encoding uses H.264, yuv420p and fast-start metadata for website playback, with no audio track. `npm run render:film -- --stills` creates review frames in `.next/film-stills/` without rendering the video. Rendering is an authoring step; ordinary website builds use the committed video and do not need FFmpeg.
 
-The Selected Work section uses the supplied Tilted Grid Hero with its original 26% tile height, 16:9 aspect ratio, 80° curve and four-second-per-tile motion. The heading and description follow the reference composition above and below the reel. A keyboard-accessible project selector opens the Flow Plumbing film or the interactive Daylight (booking) and Relay (operations) concepts. Gallery motion pauses offscreen, in a hidden tab, and on request; reduced-motion visitors see a complete still composition.
+The Selected Work section uses the supplied Tilted Grid Hero composition with larger screens, a 65° curve and ten-second-per-tile motion. A continuous WebGL surface prevents strip seams at the right edge; a flat animated fallback is available without WebGL. It starts automatically when visible, as requested by the owner, and pauses offscreen, in a hidden tab or with Pause gallery. Its five local high-resolution previews include the actual elephant SA Family Travel website. A keyboard-accessible project selector opens the Flow Plumbing film or the interactive Daylight (booking) and Relay (operations) concepts. The film independently respects reduced motion.
 
 Daylight supports selecting, adding and cancelling appointments, checking for overlapping bookings, and switching between week and list views. Relay supports creating and editing tasks, assigning owners, filtering projects and moving tasks between statuses. Their summaries derive from the current demo state. Both use fictional sample data in local React state and offer Reset demo; no messages are sent and changes are not persisted.
 
@@ -40,8 +54,8 @@ The original site is retained on GitHub branch `backup/before-expanding-demo` (c
 
 ## Components and provenance
 
-- `components/ui/tilted-grid-hero.tsx`: the user's supplied React component, integrated into the Work section. Gallery motion starts when visible, offers a pause control, pauses offscreen, and respects reduced motion. Its cylindrical geometry and continuous CSS animation are retained, with the existing reduced-motion fix. The collection, presentation and project data live in `components/selected-work.tsx`.
-- `components/ui/spotlight.tsx`: actual Motion Primitives Spotlight source by ibelick, MIT, retrieved from https://github.com/ibelick/motion-primitives/blob/main/components/core/spotlight.tsx (blob `59012f27dd56cee2f718fb4e93b9c77d048547a9`), also listed on https://21st.dev/@ibelick/components/spotlight. Integrated in the dark featured-work card; hidden for touch and disabled for reduced motion.
+- `components/ui/tilted-grid-hero.tsx`: the user's supplied React component, integrated into the Work section. Gallery motion starts when visible, offers a pause control and pauses offscreen. `lib/curved-gallery-renderer.ts` draws the continuous cylindrical mesh. The renderer and its textures load only when the gallery is visible; optional concept code loads when selected. Controlled gallery playback follows the owner’s explicit autoplay preference; uncontrolled component use respects reduced motion. The collection, presentation and project data live in `components/selected-work.tsx`.
+- `components/ui/spotlight.tsx`: retained Motion Primitives Spotlight source by ibelick, MIT, retrieved from https://github.com/ibelick/motion-primitives/blob/main/components/core/spotlight.tsx (blob `59012f27dd56cee2f718fb4e93b9c77d048547a9`), also listed on https://21st.dev/@ibelick/components/spotlight. Not imported by the current homepage.
 - `lib/utils.ts`, `components.json`, and `@/*` aliases provide the shadcn-compatible structure.
 - Fonts: Plus Jakarta Sans and Space Grotesk, bundled through Fontsource.
 - Icons: Lucide React.

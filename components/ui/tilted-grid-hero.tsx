@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { createGalleryRenderer } from "@/lib/curved-gallery-renderer";
+import type { createGalleryRenderer } from "@/lib/curved-gallery-renderer";
 
 export type TiltedGridImage = { src: string; alt?: string };
 export type TiltedGridHeroProps = {
@@ -41,6 +41,8 @@ export function TiltedGridHero({
   const [mode, setMode] = React.useState<'loading' | 'ready' | 'fallback'>('loading');
   const [systemPaused, setSystemPaused] = React.useState(true);
   const isPaused = paused ?? systemPaused;
+  const pauseState = React.useRef(isPaused);
+  pauseState.current = isPaused;
   const fallback = `gallery-fallback-${React.useId().replace(/[^a-zA-Z0-9]/g, '')}`;
 
   React.useEffect(() => {
@@ -54,25 +56,34 @@ export function TiltedGridHero({
   React.useEffect(() => {
     const element = root.current, drawing = canvas.current;
     if (!element || !drawing || !images.length) return;
-    let instance: ReturnType<typeof createGalleryRenderer>;
-    try {
-      instance = createGalleryRenderer(drawing, {
-        images, speed, tileHeight, aspectRatio, gap, axis, curve,
-        framed: !!tileClassName,
-        onReady: () => setMode('ready'),
-        onError: () => setMode('fallback'),
-      });
-    } catch {
-      setMode('fallback');
-      return;
+    let disposed = false;
+    let cleanup = () => {};
+    async function start() {
+      try {
+        const { createGalleryRenderer } = await import('@/lib/curved-gallery-renderer');
+        if (disposed) return;
+        const instance = createGalleryRenderer(drawing!, {
+          images, speed, tileHeight, aspectRatio, gap, axis, curve,
+          framed: !!tileClassName,
+          onReady: () => { if (!disposed) setMode('ready'); },
+          onError: () => { if (!disposed) setMode('fallback'); },
+        });
+        renderer.current = instance;
+        instance.setPaused(pauseState.current);
+        const resize = () => instance.resize(element!.clientWidth, element!.clientHeight);
+        resize();
+        const observer = new ResizeObserver(([entry]) => instance.resize(entry.contentRect.width, entry.contentRect.height));
+        observer.observe(element!);
+        window.addEventListener('resize', resize);
+        cleanup = () => { observer.disconnect(); window.removeEventListener('resize', resize); instance.destroy(); renderer.current = null; };
+      } catch { if (!disposed) setMode('fallback'); }
     }
-    renderer.current = instance;
-    const resize = () => instance.resize(element.clientWidth, element.clientHeight);
-    resize();
-    const observer = new ResizeObserver(([entry]) => instance.resize(entry.contentRect.width, entry.contentRect.height));
-    observer.observe(element);
-    window.addEventListener('resize', resize);
-    return () => { observer.disconnect(); window.removeEventListener('resize', resize); instance.destroy(); renderer.current = null; };
+    // Do not compile GPU shaders or fetch five large textures below the fold.
+    const visibility = 'IntersectionObserver' in window ? new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { visibility?.disconnect(); void start(); }
+    }) : null;
+    if (visibility) visibility.observe(element); else void start();
+    return () => { disposed = true; visibility?.disconnect(); cleanup(); };
   }, [images, speed, tileHeight, aspectRatio, gap, axis, curve, tileClassName]);
 
   React.useEffect(() => { renderer.current?.setPaused(isPaused); }, [isPaused, images, speed, tileHeight, aspectRatio, gap, axis, curve, tileClassName]);
@@ -90,7 +101,7 @@ export function TiltedGridHero({
         animation: `${fallback} ${images.length * speed}s linear infinite`, animationPlayState: isPaused ? 'paused' : 'running',
       }}>
         {[...images, ...images].map((image, i) => <div key={i} className={cn('shrink-0 overflow-hidden rounded-2xl', tileClassName)} style={{ width: u(aspectRatio), height: u(1) }}>
-          <img src={image.src} alt="" draggable={false} className="h-full w-full object-cover" />
+          <img src={image.src} alt="" width={1600} height={900} loading="lazy" decoding="async" draggable={false} className="h-full w-full object-cover" />
         </div>)}
       </div>
     </div>}
