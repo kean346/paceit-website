@@ -65,3 +65,7 @@ Public DNS/HTTPS checks from this environment were blocked by network/proxy rest
 - Compared existing homepage text against the original production export during the technical audit, excluding the explicitly changed enquiry form. The later legal integration adds only legal links to the homepage; marketing sections remain unchanged.
 - Legal-page checks cover unique metadata/canonicals, sitemap entries, footer/form links, anchored contents, mobile navigation and responsive widths. The operator identity was confirmed by the owner; no live legal/PAIA registration or provider-account review was performed.
 - `npm audit --json`: zero reported advisories across production and development dependencies.
+
+## Follow-up — 25 October 2026
+
+The owner authorised the legal/accessibility follow-up. See [the updated audit](legal-accessibility-audit.md): separate cookie policy, enquiry acknowledgement, contrast fixes, reduced-motion support, keyboard validation and expanded business disclosures. The earlier contrast-deferral and two-policy inventory above are historical, not the current implementation. Refund terms were explicitly deferred by the owner. Operational/legal verification remains outstanding.

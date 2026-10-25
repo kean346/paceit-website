@@ -1,16 +1,14 @@
 import { createHash, createHmac } from 'node:crypto';
+import { isEmail } from '@/lib/enquiry-validation';
+export { isEmail } from '@/lib/enquiry-validation';
 
 export const MAX_REQUEST_BYTES = 24 * 1024;
 export type Enquiry = { name: string; email: string; idea: string; website: string };
 
-export function isEmail(value: string): boolean {
-  return value.length <= 254 && !/[\r\n\u0000-\u0020\u007f]/.test(value)
-    && /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$/.test(value);
-}
-
 export function parseEnquiry(value: unknown): Enquiry | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
   const data = value as Record<string, unknown>;
+  if (data.privacyAcknowledged !== true) return null;
   if (typeof data.name !== 'string' || typeof data.email !== 'string' || typeof data.idea !== 'string' || (data.website !== undefined && typeof data.website !== 'string')) return null;
   const enquiry = { name: data.name.trim().normalize('NFC'), email: data.email.trim(), idea: data.idea.trim().normalize('NFC'), website: String(data.website ?? '').trim() };
   if (enquiry.name.length < 1 || enquiry.name.length > 100 || /[\u0000-\u001f\u007f]/.test(enquiry.name)

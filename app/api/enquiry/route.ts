@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
   try { data = await readBody(request); }
   catch (error) { return reply(error instanceof RangeError ? 413 : 400, 'Please check the form and try again.'); }
   const enquiry = parseEnquiry(data);
-  if (!enquiry) return reply(400, 'Please enter your name, a valid email address and a message of 10–4,000 characters.');
+  if (!enquiry) return reply(400, 'Please enter your name, a valid email address and a message of 10–4,000 characters, and confirm the privacy acknowledgement.');
 
   const transporter = createTransport({
     host, port, secure: port === 465, requireTLS: port !== 465,
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
         subject: 'New website enquiry for paceIT',
         messageId: `<${deliveryKey(enquiry, password)}@paceit.co.za>`,
         // Plain text only: visitor input is never interpreted as HTML or SQL.
-        text: `Project enquiry for paceIT\n\nName: ${enquiry.name}\nEmail: ${enquiry.email}\n\n${enquiry.idea}`,
+        text: `Project enquiry for paceIT\n\nName: ${enquiry.name}\nEmail: ${enquiry.email}\n\n${enquiry.idea}\n\nPrivacy acknowledgement: confirmed; response requested. No marketing opt-in.`,
       }),
       new Promise<never>((_, reject) => { deadline = setTimeout(() => { transporter.close(); reject(new Error('SMTP deadline exceeded')); }, 18000); }),
     ]);

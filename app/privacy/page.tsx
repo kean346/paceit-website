@@ -24,7 +24,7 @@ export default function Privacy() {
     { id: 'purposes', title: 'Why we use it', content: <>
       <p>We use enquiry information to respond, discuss a possible project and take steps you request before entering an agreement. Client information is used to deliver agreed work, administer the relationship and meet applicable accounting, tax and other legal obligations. Technical information helps us operate, secure and troubleshoot the website.</p>
       <p>We rely on an appropriate basis under applicable law, such as steps requested before a contract, performance of an agreement, legitimate interests in responding to enquiries and securing our services, or a legal obligation. If consent is required for a separate use, we will request it.</p>
-      <p>Sending an enquiry does not subscribe you to marketing. You can choose not to provide information, but we may be unable to respond or provide a service without the necessary details.</p>
+      <p>The form asks you to confirm that you understand how your details will be used and want us to respond. This is limited to your enquiry; it is not permission for unrelated marketing. Sending an enquiry does not subscribe you to marketing. You can choose not to provide information, but we may be unable to respond or provide a service without the necessary details.</p>
     </> },
     { id: 'providers-and-transfers', title: 'Providers and international processing', content: <>
       <p>Vercel hosts this website. Brevo provides the SMTP service that sends enquiries to {email}. Our mailbox provider also processes messages received at that address. These providers process information needed to deliver their services. We do not sell your personal information.</p>
@@ -42,7 +42,7 @@ export default function Privacy() {
     </> },
     { id: 'cookies', title: 'Cookies and browser storage', content: <>
       <p>This version of the website does not use analytics or advertising cookies, or persistent browser storage for visitor data. The interactive portfolio concepts use temporary page state and reset when the page is reloaded.</p>
-      <p>If we introduce non-essential tracking or storage, we will update this notice and provide any consent controls required before enabling it.</p>
+      <p>Read our <a href="/cookies">Cookie Policy</a> for details about the current setup. If we introduce non-essential tracking or storage, we will update this notice and provide any consent controls required before enabling it.</p>
     </> },
     { id: 'your-rights', title: 'Access, correction and deletion', content: <>
       <p>Email {email} to ask about your personal information, request access or correction, object to processing, or request deletion, subject to applicable legal requirements and exceptions. We may need to verify your identity before disclosing or changing records.</p>

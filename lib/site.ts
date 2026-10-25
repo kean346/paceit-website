@@ -19,7 +19,7 @@ export const site = {
 
 export const isPreview = process.env.VERCEL_ENV === 'preview';
 // Add approved, published pages here; fragments and API routes are not pages.
-export const indexableRoutes = ['/', '/privacy', '/terms'] as const;
+export const indexableRoutes = ['/', '/privacy', '/terms', '/cookies'] as const;
 export const absoluteUrl = (path: string) => new URL(path, site.url).toString();
 
 export function pageMetadata({ title, description, path }: { title: string; description: string; path: string }): Metadata {

@@ -33,7 +33,7 @@ function setup(provider = () => ({ accepted: ['info@paceit.co.za'], rejected: []
   }
   return { route: load('app/api/enquiry/route.ts'), calls, transportOptions, helpers: load('lib/enquiry.ts') };
 }
-const valid = { name: 'Alex & Morgan', email: 'alex@example.com', idea: 'Please help with our customer quotation process.', website: '' };
+const valid = { name: 'Alex & Morgan', email: 'alex@example.com', idea: 'Please help with our customer quotation process.', website: '', privacyAcknowledged: true };
 function request(data = valid, headers = {}) {
   return new NextRequest('https://paceit.example/api/enquiry', { method: 'POST', headers: { Origin: 'https://paceit.example', 'Content-Type': 'application/json', ...headers }, body: typeof data === 'string' ? data : JSON.stringify(data) });
 }
@@ -76,7 +76,7 @@ test('rejects cross-origin requests and non-JSON submissions without contacting 
 
 test('validates inputs server-side, including CRLF injection, spam trap and bounded strings', async () => {
   const invalid = [
-    {}, [], null, { ...valid, name: '   ' }, { ...valid, name: 'x'.repeat(101) },
+    {}, [], null, { ...valid, privacyAcknowledged: false }, { ...valid, privacyAcknowledged: 'true' }, { ...valid, privacyAcknowledged: undefined }, { ...valid, name: '   ' }, { ...valid, name: 'x'.repeat(101) },
     { ...valid, name: 'Alex\r\nBcc: victim@example.com' }, { ...valid, email: 'alex@example.com\r\nBcc:a@b.com' },
     { ...valid, email: 'invalid' }, { ...valid, idea: 'short' }, { ...valid, idea: 'x'.repeat(4001) },
     { ...valid, idea: 1234 }, { ...valid, idea: 'Control\u0000character example' }, { ...valid, website: 'bot.example' },

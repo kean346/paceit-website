@@ -25,7 +25,7 @@ export function LegalPage({ title, introduction, sections }: { title: string; in
           {section.content}
         </section>)}</article>
       </div>
-      <div className="legal-end"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms of Website Use</a><a href="/#contact">Contact paceIT</a></div>
+      <div className="legal-end"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms of Website Use</a><a href="/cookies">Cookie Policy</a><a href="/#contact">Contact paceIT</a></div>
     </main>
     <SiteFooter homePage={false}/>
   </div>;

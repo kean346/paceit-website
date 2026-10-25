@@ -11,7 +11,8 @@
     "render:work": "node scripts/capture-work-previews.cjs",
     "test:gallery": "node tests/curved-gallery-regression.cjs",
     "test:enquiry": "node --test tests/enquiry-security.cjs",
-    "test:site": "node tests/site-audit.cjs"
+    "test:site": "node tests/site-audit.cjs",
+    "test:accessibility": "node tests/legal-accessibility.cjs"
   },
   "dependencies": {
     "@fontsource/plus-jakarta-sans": "5.3.0",
@@ -32,6 +33,7 @@
     "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "axe-core": "^4.14.0",
     "playwright": "1.62.1",
     "tailwindcss": "^4",
     "typescript": "^5"

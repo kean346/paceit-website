@@ -52,13 +52,20 @@ const galleryImages = [
 export function SelectedWork() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [motionPreferenceRead, setMotionPreferenceRead] = useState(false);
+  useEffect(() => {
+    const preference = matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => { setPaused(preference.matches); setMotionPreferenceRead(true); };
+    update(); preference.addEventListener('change', update);
+    return () => preference.removeEventListener('change', update);
+  }, []);
   const [visible, setVisible] = useState(false);
   const [tabVisible, setTabVisible] = useState(true);
   const reel = useRef<HTMLDivElement>(null);
   const tabs = useRef<Array<HTMLButtonElement | null>>([]);
   const project = projects[active];
   // This gallery starts automatically; Pause is an explicit visitor choice.
-  const playing = visible && tabVisible && !paused;
+  const playing = motionPreferenceRead && visible && tabVisible && !paused;
   const playbackAction = paused ? 'Resume' : 'Pause';
   useEffect(() => {
     const element = reel.current;

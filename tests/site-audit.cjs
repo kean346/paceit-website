@@ -8,7 +8,7 @@ const canonical = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://paceit.co
 (async () => {
   const browser = await chromium.launch({ executablePath: process.env.PACEIT_CHROMIUM_PATH || '/usr/bin/chromium', args: ['--no-sandbox', '--enable-unsafe-swiftshader'] });
   try {
-    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'no-preference' });
     const page = await context.newPage();
     const errors = [], requests = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -37,7 +37,7 @@ const canonical = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://paceit.co
     const sitemap = await context.request.get(base + '/sitemap.xml');
     assert.equal(sitemap.status(), 200);
     assert((await sitemap.text()).includes(`<loc>${canonical}/</loc>`));
-    for (const path of ['/privacy', '/terms']) assert((await sitemap.text()).includes(`<loc>${canonical}${path}</loc>`));
+    for (const path of ['/privacy', '/terms', '/cookies']) assert((await sitemap.text()).includes(`<loc>${canonical}${path}</loc>`));
     assert.doesNotMatch(await sitemap.text(), /\/api\/|#|<lastmod>/);
     const robots = await context.request.get(base + '/robots.txt');
     assert.match(await robots.text(), /Allow: \/\nDisallow: \/api\//);
@@ -97,12 +97,13 @@ const canonical = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://paceit.co
     await form.locator('#name').fill(enquiry.name);
     await form.locator('#email').fill(enquiry.email);
     await form.locator('#idea').fill(enquiry.idea);
+    await form.locator('#privacyAcknowledged').check();
     const location = page.url();
     await form.getByRole('button', { name: 'Send enquiry' }).click();
     await page.waitForFunction(() => document.querySelector('.form-status').textContent.includes('could not be sent'));
     assert.equal(await form.locator('#idea').inputValue(), enquiry.idea);
     assert.equal(page.url(), location);
-    assert.deepEqual(sentBody, { ...enquiry, website: '' });
+    assert.deepEqual(sentBody, { ...enquiry, website: '', privacyAcknowledged: true });
     await page.unroute('**/api/enquiry');
     await page.route('**/api/enquiry', async route => { calls++; await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ message: 'Accepted by test transport' }) }); });
     await form.getByRole('button', { name: 'Send enquiry' }).click();
@@ -119,7 +120,7 @@ const canonical = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://paceit.co
     for (const [name, path] of [['Privacy', '/privacy'], ['Terms', '/terms']]) assert.equal(await page.locator('footer').getByRole('link', { name, exact: true }).getAttribute('href'), path);
     const legal = await context.newPage();
     legal.on('pageerror', error => errors.push(error.message));
-    for (const [path, title] of [['/privacy', 'Privacy Policy'], ['/terms', 'Terms of Website Use']]) {
+    for (const [path, title] of [['/privacy', 'Privacy Policy'], ['/terms', 'Terms of Website Use'], ['/cookies', 'Cookie Policy']]) {
       const response = await legal.goto(base + path, { waitUntil: 'networkidle' });
       assert.equal(response.status(), 200);
       assert.equal(await legal.locator('h1').count(), 1);
@@ -129,7 +130,7 @@ const canonical = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://paceit.co
       assert.equal(await legal.locator('link[rel="canonical"]').getAttribute('href'), canonical + path);
       assert.equal(await legal.locator('meta[property="og:url"]').getAttribute('content'), canonical + path);
       assert.equal(await legal.locator('meta[name="twitter:title"]').getAttribute('content'), `${title} | paceIT`);
-      assert.match(await legal.locator('main').innerText(), /Kean Maan/);
+      assert.match(await legal.locator('main, footer').allTextContents().then(parts => parts.join(' ')), /Kean Maan/);
       assert.doesNotMatch(await legal.locator('main').innerText(), /\[publication date\]|\[full legal name|\[confirmed|Sean \/ Kean|draft for owner/i);
       assert.equal(await legal.locator('video, canvas').count(), 0);
       assert(await legal.locator('.legal-contents a').evaluateAll(links => links.every(link => document.querySelector(link.hash))));

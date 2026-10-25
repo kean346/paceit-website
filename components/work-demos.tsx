@@ -393,7 +393,6 @@ export function DaylightDemo() {
                             height: `${(item.duration / 540) * 100}%`,
                           }}
                           onClick={() => setSelected(item.id)}
-                          aria-label={`View ${item.name}, ${item.service}, ${day}, ${timeRange(item)}`}
                         >
                           <strong>{item.name}</strong>
                           <span>{item.service}</span>
@@ -780,7 +779,6 @@ export function RelayDemo() {
                       setFormError('');
                       setEditing(task);
                     }}
-                    aria-label={`Open task: ${task.title}`}
                   >
                     <span className="demo-task-project">
                       <i
