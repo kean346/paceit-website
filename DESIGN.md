@@ -16,7 +16,7 @@ Preserve the existing quiet studio identity, split headings, generous spacing an
 
 Marketing/content register: retain semantic links, native controls, skip link, visible keyboard focus, one H1 per route and the existing shared LegalPage shell. Enquiry validation is inline with field associations and first-error focus. A required, initially unchecked acknowledgement requests a response only; it is not a marketing subscription or acceptance of a paid contract. Server validation independently requires it. No form values are saved to browser storage.
 
-The gallery autoplays for visitors without reduced-motion preferences, offers pause/resume and pauses offscreen. Reduced motion starts it paused; visitors can explicitly resume. Demo tabs support arrow keys, Home and End. Native dialog, select and date controls preserve platform keyboard behaviour. Dialogs remain centered and Escape dismisses them. Demo state is fictional and transient.
+The owner explicitly requires the gallery to autoplay on entry, including when reduced motion is enabled. Keep an immediately available pause/resume control and pause rendering offscreen or in a hidden tab. Do not silently reintroduce automatic pausing based on system motion preferences; other page animations continue to respect reduced motion. Demo tabs support arrow keys, Home and End. Native dialog, select and date controls preserve platform keyboard behaviour. Dialogs remain centered and Escape dismisses them. Demo state is fictional and transient.
 
 ## Verification
 

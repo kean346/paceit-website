@@ -24,8 +24,16 @@ const base = process.env.AUDIT_BASE_URL || 'http://127.0.0.1:3004';
   await page.setViewportSize({width:1440,height:1000});
   await page.locator('#work-gallery').scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>document.querySelector('#work-gallery').dataset.galleryRenderer==='ready');
-  assert(await page.getByRole('button',{name:'Resume gallery',exact:true}).count());
-  assert(await page.locator('#work-gallery').evaluate(el=>el.classList.contains('gallery-paused')));
+  assert(await page.getByRole('button',{name:'Pause gallery',exact:true}).count());
+  assert(await page.locator('#work-gallery').evaluate(el=>el.classList.contains('gallery-playing')));
+  assert(await page.locator('#work-gallery canvas').evaluate(async canvas=>{
+   const before=canvas.toDataURL();
+   for(let attempt=0;attempt<30;attempt++){await new Promise(resolve=>setTimeout(resolve,100));if(canvas.toDataURL()!==before)return true;}
+   return false;
+  }), 'Gallery must actually animate on entry even when the system requests reduced motion');
+  await page.getByRole('button',{name:'Pause gallery',exact:true}).click();
+  assert(await page.locator('#work-gallery canvas').evaluate(async canvas=>{const before=canvas.toDataURL();await new Promise(resolve=>setTimeout(resolve,250));return canvas.toDataURL()===before;}), 'Manual pause must stop rendered movement');
+  await page.getByRole('button',{name:'Resume gallery',exact:true}).click();
   for(const name of ['Daylight','Relay']) {
    await page.getByRole('tab',{name:new RegExp(name)}).click();await page.locator('.work-demo').waitFor();await page.waitForTimeout(300);await audit(name);
    if(name==='Daylight')await page.getByRole('button',{name:'New appointment',exact:true}).click();
@@ -45,6 +53,6 @@ const base = process.env.AUDIT_BASE_URL || 'http://127.0.0.1:3004';
   assert.equal(calls,1);assert.equal(await form.locator('#privacyAcknowledged').isChecked(),false);
   assert.deepEqual(external,[]);assert.deepEqual(await context.cookies(),[]);assert.equal(await page.evaluate(()=>localStorage.length+sessionStorage.length),0);assert.equal(await page.locator('iframe').count(),0);
   await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Open navigation'}).click();await page.locator('#main-navigation a').first().focus();await page.keyboard.press('Escape');assert.equal(await page.getByRole('button',{name:'Open navigation'}).getAttribute('aria-expanded'),'false');
-  console.log('PASS: reduced motion, keyboard forms, required acknowledgement, no trackers/storage/embeds, dialog Escape and menu focus');
+  console.log('PASS: owner-requested gallery autoplay with reduced motion, keyboard forms, required acknowledgement, no trackers/storage/embeds, dialog Escape and menu focus');
  } finally {await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1});

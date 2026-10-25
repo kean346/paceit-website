@@ -58,3 +58,7 @@ See package scripts for reproducible checks. Tests use a local production server
 - `npm audit --cache /workspace/.cache/npm --json`: zero reported advisories across production and development dependencies at review time.
 - Reviewed desktop contact and mobile enquiry/policy/footer screenshots in Chromium. Contact underlines were also strengthened for field-boundary contrast; image/video pixels and every WCAG criterion were not independently certified.
 - `git diff --check`: passed. No formatter/linter command exists in this repository; no formatter result is claimed.
+
+## Owner correction — gallery autoplay
+
+The owner rejected the reduced-motion-based initial pause after deployment. Restored the explicitly requested gallery autoplay for both system motion settings; the visitor can still pause/resume, and offscreen/hidden-tab rendering still pauses. The reduced-motion initial-pause statements above are historical and superseded by this decision. Other reduced-motion behaviour is unchanged. This intentional exception must be considered in any future accessibility conformance review; do not claim universal reduced-motion support.
