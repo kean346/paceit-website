@@ -31,7 +31,7 @@ function framed(img,phone=false){let pad=phone?15:12,top=phone?20:42;let n=creat
 function conduit(t,opts={}){require('./tube-v2.cjs')(c,W,H,t,opts);}
 const im={},tex={},flows=[];
 function whiteFlash(p){alpha(p,()=>{c.fillStyle=WHITE;c.fillRect(0,0,W,H);});}
-function small(s,light=false){type(s,W/2,H-(vertical?210:42),vertical?22:20,light?'#57635e':'#9caaa5','center','Jakarta');}
+function small(s,light=false){type(s,W/2,H-(vertical?320:42),vertical?22:20,light?'#57635e':'#9caaa5','center','Jakarta');}
 
 function softCard(img,x,y,w,rotation=0,opacity=1){
  const h=w*img.height/img.width,r=Math.min(30,w*.035);c.save();c.globalAlpha*=opacity;c.translate(x,y);c.rotate(rotation);
