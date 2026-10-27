@@ -1,0 +1,3 @@
+const {chromium}=require('playwright'),path=require('path');
+process.chdir(path.resolve(__dirname,'..'));
+(async()=>{let b=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});for(const [name,width,height] of [['desktop',1600,1000],['mobile',600,1080]]){let p=await b.newPage({viewport:{width,height},reducedMotion:'reduce'});await p.goto('http://127.0.0.1:3004',{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.locator('#services').scrollIntoViewIfNeeded();await p.waitForTimeout(500);await p.evaluate(()=>window.scrollTo(0,0));await p.screenshot({path:`assets/scroll-${name}.png`,fullPage:true});await p.close();}await b.close();})();

@@ -1,0 +1,7 @@
+node_modules/
+.cache/
+references/
+output/
+out/
+audio/*.wav
+assets/flow-frames/

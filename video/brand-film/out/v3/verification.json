@@ -1,0 +1,28 @@
+{
+  "exports": [
+    {
+      "file": "out/v3/paceit-signal-16x9.mp4",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "duration": 57,
+      "stereo": true,
+      "fullDecodePassed": true,
+      "blackIntervals": [],
+      "peak": "max_volume: -1.2 dB"
+    },
+    {
+      "file": "out/v3/paceit-signal-reel.mp4",
+      "width": 1080,
+      "height": 1920,
+      "fps": 60,
+      "duration": 57,
+      "stereo": true,
+      "fullDecodePassed": true,
+      "blackIntervals": [],
+      "peak": "max_volume: -1.2 dB"
+    }
+  ],
+  "websiteTrackedFilesUnchanged": true,
+  "newRepositoryFilesConfinedToVideoProject": true
+}

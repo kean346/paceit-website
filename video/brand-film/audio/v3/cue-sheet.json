@@ -1,0 +1,177 @@
+[
+  {
+    "time": 0.8,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 2.1,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 3.6,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 5.1,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 6.1,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 7,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 10.4,
+    "name": "Cinematic low impact",
+    "stem": "impacts"
+  },
+  {
+    "time": 13,
+    "name": "Travelling camera sweep",
+    "stem": "transitions"
+  },
+  {
+    "time": 13,
+    "name": "Cinematic low impact",
+    "stem": "impacts"
+  },
+  {
+    "time": 14.4,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 15.5,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 16.6,
+    "name": "Confirmation",
+    "stem": "ui"
+  },
+  {
+    "time": 19,
+    "name": "Travelling camera sweep",
+    "stem": "transitions"
+  },
+  {
+    "time": 19,
+    "name": "Cinematic low impact",
+    "stem": "impacts"
+  },
+  {
+    "time": 24.48,
+    "name": "Panel landing",
+    "stem": "music"
+  },
+  {
+    "time": 25.2,
+    "name": "Panel landing",
+    "stem": "music"
+  },
+  {
+    "time": 25.92,
+    "name": "Panel landing",
+    "stem": "music"
+  },
+  {
+    "time": 26.64,
+    "name": "Panel landing",
+    "stem": "music"
+  },
+  {
+    "time": 28,
+    "name": "Cinematic low impact",
+    "stem": "impacts"
+  },
+  {
+    "time": 36,
+    "name": "Cinematic low impact",
+    "stem": "impacts"
+  },
+  {
+    "time": 36.766,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 37.92,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 38.917,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 39.584,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 39.816,
+    "name": "Confirmation",
+    "stem": "ui"
+  },
+  {
+    "time": 40.489,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 40.947,
+    "name": "Confirmation",
+    "stem": "ui"
+  },
+  {
+    "time": 44,
+    "name": "Cinematic low impact",
+    "stem": "impacts"
+  },
+  {
+    "time": 46.8,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 47.2,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 47.6,
+    "name": "Interface tap",
+    "stem": "ui"
+  },
+  {
+    "time": 52.2,
+    "name": "Cinematic low impact",
+    "stem": "impacts"
+  },
+  {
+    "time": 52.2,
+    "name": "paceIT tonal signature",
+    "stem": "music"
+  },
+  {
+    "time": 52.48,
+    "name": "paceIT tonal signature",
+    "stem": "music"
+  },
+  {
+    "time": 52.78,
+    "name": "paceIT tonal signature",
+    "stem": "music"
+  }
+]
