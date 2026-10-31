@@ -42,7 +42,7 @@ const projects = [
 ];
 // High-resolution local previews; repeat in order without adding lower demo tabs.
 const galleryImages = [
-  { src: '/work/sa-family-travel-elephants.webp', alt: 'SA Family Travel website with elephants beneath a pink sky' },
+  { src: '/work/soda-poster.webp', video: '/work/soda-preview.mp4', alt: 'Soda product demo video' },
   { src: '/work/forme-poster.webp', video: '/work/forme-preview.mp4', alt: 'Forme product demo video' },
   { src: '/work/daylight-preview.webp', alt: 'Mr Braai Guy quotation dashboard' },
   { src: '/work/analytics-preview.webp', alt: 'Northstar analytics dashboard' },
