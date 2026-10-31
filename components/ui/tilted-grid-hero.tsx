@@ -96,7 +96,7 @@ export function TiltedGridHero({
     {mode === 'fallback' && <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <style>{`@keyframes ${fallback}{to{transform:translateX(calc(-50% - ${u(gap / 200)}))}}.${fallback}{animation-duration:${Math.max(1, images.length) * speed}s!important;animation-iteration-count:infinite!important}`}</style>
       <div className={cn('absolute flex', fallback)} style={{
-        left: `calc(50% - ${u(aspectRatio + gap / 200)})`,
+        left: `calc(50% - ${u(1.5 * aspectRatio + gap / 100)})`,
         top: `calc(${axis}% - ${u(.5)})`, gap: u(gap / 100), width: 'max-content',
         animation: `${fallback} ${images.length * speed}s linear infinite`, animationPlayState: isPaused ? 'paused' : 'running',
       }}>

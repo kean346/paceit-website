@@ -129,7 +129,7 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
   const anisotropy = gl.getExtension('EXT_texture_filter_anisotropic');
   const textures: WebGLTexture[] = [];
   const videos = new Map<number, HTMLVideoElement>();
-  let width = 0, height = 0, phase = .5, lastTime: number | null = null, frame = 0;
+  let width = 0, height = 0, phase = 1, lastTime: number | null = null, frame = 0;
   let paused = true, ready = false, destroyed = false, failed = false;
 
   function draw() {
