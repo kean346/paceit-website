@@ -34,7 +34,7 @@ export function SageHero() {
   }
 
   function tick(now: number) {
-   if (disposed || reduced.matches || document.hidden) return;
+   if (disposed || document.hidden) return;
    if (!fading && current.duration && current.currentTime >= current.duration - 1 && next.readyState >= 2) {
     next.currentTime = 0; next.style.zIndex = '3'; current.style.zIndex = '2'; next.style.opacity = '0';
     void next.play().catch(() => {}); fading = true; fadeStart = now;
@@ -52,7 +52,7 @@ export function SageHero() {
 
   async function startVideo() {
    stopVideo();
-   if (disposed || reduced.matches || document.hidden) return;
+   if (disposed || document.hidden) return;
    const request = playback;
    current = a!; next = b!; fading = false;
    for (const video of [a!, b!]) {
@@ -62,7 +62,7 @@ export function SageHero() {
    current.currentTime = 0;
    try {
     await current.play();
-    if (disposed || request !== playback || reduced.matches || document.hidden) return;
+    if (disposed || request !== playback || document.hidden) return;
     current.style.zIndex = '2'; current.style.transition = 'opacity .8s ease'; current.style.opacity = '1';
     fadeTimer = window.setTimeout(() => { if (!disposed) current.style.transition = 'none'; }, 850);
     frame = requestAnimationFrame(tick);
@@ -118,6 +118,6 @@ export function SageHero() {
    <p className={styles.description} data-copy>Websites, custom software and smart automation — thoughtfully connected to make your business work better.</p>
    <a className={`${styles.pill} ${styles.solid} ${styles['main-cta']}`} href="#contact" data-copy>Let’s build something useful <ArrowUpRight size={18} aria-hidden="true" /></a>
   </div>
-  <aside className={styles.cards} aria-label="What paceIT builds">{services.map(({ label, value, detail, href, Icon }) => <a key={label} className={styles['glass-card']} href={href} data-card><div className={styles['card-label']}>{label}<Icon aria-hidden="true" /></div><div className={styles['card-value']}>{value}</div><div className={styles['card-detail']}>{detail}</div></a>)}</aside>
+  <aside className={styles.cards} aria-label="What paceIT builds">{services.map(({ label, value, detail, Icon }) => <div key={label} className={styles['glass-card']} data-card><div className={styles['card-label']}>{label}<Icon aria-hidden="true" /></div><div className={styles['card-value']}>{value}</div><div className={styles['card-detail']}>{detail}</div></div>)}</aside>
  </section>;
 }
