@@ -1,7 +1,8 @@
-import { ArrowUpRight, ArrowDown, Code2, Workflow, PanelsTopLeft, Check, CornerDownRight } from 'lucide-react';
-import { Navigation, Reveal, ContactForm } from '@/components/site-interactions';
+import { ArrowUpRight, Code2, Workflow, PanelsTopLeft, CornerDownRight } from 'lucide-react';
+import { Reveal, ContactForm } from '@/components/site-interactions';
 import { SelectedWork } from '@/components/selected-work';
 import { SiteFooter } from '@/components/site-footer';
+import { SageHero } from '@/components/sage-hero';
 import type { Metadata } from 'next';
 import { businessSchema } from '@/lib/site';
 
@@ -11,24 +12,8 @@ export default function Home() {
  return <>
   <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessSchema()).replace(/</g, '\\u003c') }} />
   <a className="skip-link" href="#main">Skip to content</a>
-  <Navigation />
   <main id="main">
-   <section className="hero section-shell" id="home" aria-labelledby="hero-title">
-    <div className="hero-topline mono"><span><i className="signal-dot" /> INDEPENDENT TECHNOLOGY STUDIO</span><span>PRETORIA, SOUTH AFRICA ↗</span></div>
-    <div className="hero-grid">
-     <div className="hero-copy"><p className="eyebrow">A little less friction. A lot more forward.</p><h1 id="hero-title">Good business.<br/>Better <span className="accent-word">systems<svg viewBox="0 0 500 20" aria-hidden="true"><path d="M3 13 Q240 -2 497 9" /></svg></span>.</h1><p className="hero-description">Custom software and automation that give you back time, clarity and room to grow.</p><div className="hero-actions"><a className="button primary" href="#contact">Discuss a project <ArrowUpRight size={18}/></a><a className="text-link" href="#work">See selected work <ArrowDown size={16}/></a></div></div>
-     <div className="system-art" role="img" aria-label="An illustration of a quote moving from a request to an organised workflow">
-      <div className="art-grid"/><div className="orbit orbit-one"/><div className="orbit orbit-two"/>
-      <div className="art-caption mono">SMALL CONNECTIONS.<br/>A BIG DIFFERENCE.</div>
-      <div className="flow-note note-one"><span className="note-symbol"><PanelsTopLeft size={17}/></span><div><small>IT STARTS WITH A REQUEST</small><strong>“Can you send me a quote?”</strong></div><span className="note-dot"/></div>
-      <div className="flow-connector"><span/><ArrowDown size={19}/></div>
-      <div className="flow-note note-two"><div className="note-header"><span className="mono">ONE CLEAR WORKFLOW</span><span className="mini-brand">pace<span>IT.</span></span></div><div className="progress-line"><span className="progress-node"><Check size={13}/></span><i/><span className="progress-node"><Check size={13}/></span><i/><span className="progress-node final-node"><ArrowUpRight size={15}/></span></div><div className="progress-labels"><span>Capture</span><span>Organise</span><span>Move forward</span></div></div>
-      <div className="flow-note note-three"><span className="success-icon"><Check size={18}/></span><div><strong>One less thing to chase.</strong><small>MORE TIME FOR THE WORK THAT MATTERS.</small></div></div>
-      <div className="art-foot mono"><span>DESIGNED AROUND YOUR BUSINESS</span><span>01 — 03</span></div>
-     </div>
-    </div>
-    <div className="hero-footer"><span>Built for the way you work.</span><div><span>Software</span><i/><span>Automation</span><i/><span>Web</span></div><a href="#work" aria-label="Scroll to selected work"><ArrowDown size={19}/></a></div>
-   </section>
+   <SageHero />
 
    <section className="work-section" id="work" aria-labelledby="work-title">
     <SelectedWork />
