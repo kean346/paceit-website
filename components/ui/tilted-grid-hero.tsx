@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import type { createGalleryRenderer } from "@/lib/curved-gallery-renderer";
 
-export type TiltedGridImage = { src: string; alt?: string };
+export type TiltedGridImage = { src: string; video?: string; alt?: string };
 export type TiltedGridHeroProps = {
   images: TiltedGridImage[];
   /** Seconds to move by one screen. */
@@ -96,12 +96,14 @@ export function TiltedGridHero({
     {mode === 'fallback' && <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <style>{`@keyframes ${fallback}{to{transform:translateX(calc(-50% - ${u(gap / 200)}))}}.${fallback}{animation-duration:${Math.max(1, images.length) * speed}s!important;animation-iteration-count:infinite!important}`}</style>
       <div className={cn('absolute flex', fallback)} style={{
-        left: `calc(50% - ${u(1.5 * aspectRatio + gap / 100)})`,
+        left: `calc(50% - ${u(aspectRatio + gap / 200)})`,
         top: `calc(${axis}% - ${u(.5)})`, gap: u(gap / 100), width: 'max-content',
         animation: `${fallback} ${images.length * speed}s linear infinite`, animationPlayState: isPaused ? 'paused' : 'running',
       }}>
         {[...images, ...images].map((image, i) => <div key={i} className={cn('shrink-0 overflow-hidden rounded-2xl', tileClassName)} style={{ width: u(aspectRatio), height: u(1) }}>
-          <img src={image.src} alt="" width={1600} height={900} loading="lazy" decoding="async" draggable={false} className="h-full w-full object-cover" />
+          {image.video ? <video src={image.video} poster={image.src} muted loop playsInline autoPlay={!isPaused}
+            ref={element => { if (element) { if (isPaused) element.pause(); else void element.play().catch(() => {}); } }}
+            className="h-full w-full object-contain" /> : <img src={image.src} alt="" width={1600} height={900} loading="lazy" decoding="async" draggable={false} className="h-full w-full object-cover" />}
         </div>)}
       </div>
     </div>}

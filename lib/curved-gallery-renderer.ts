@@ -1,6 +1,6 @@
 /** A shared triangle mesh keeps curved previews on one continuous drawing surface. */
 export type GalleryRendererOptions = {
-  images: { src: string }[];
+  images: { src: string; video?: string }[];
   speed: number;
   tileHeight: number;
   aspectRatio: number;
@@ -128,13 +128,20 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
   gl.clearColor(0, 0, 0, 0);
   const anisotropy = gl.getExtension('EXT_texture_filter_anisotropic');
   const textures: WebGLTexture[] = [];
-  let width = 0, height = 0, phase = 1, lastTime: number | null = null, frame = 0;
+  const videos = new Map<number, HTMLVideoElement>();
+  let width = 0, height = 0, phase = .5, lastTime: number | null = null, frame = 0;
   let paused = true, ready = false, destroyed = false, failed = false;
 
   function draw() {
     if (!ready || destroyed || failed || !width || !height) return;
     const geometry = galleryGeometry(width, height, options);
     if (!(geometry.pitch > 0)) return;
+    for (const [index, video] of videos) {
+      if (video.readyState >= 2) {
+        gl!.bindTexture(gl!.TEXTURE_2D, textures[index]);
+        gl!.texImage2D(gl!.TEXTURE_2D, 0, gl!.RGBA, gl!.RGBA, gl!.UNSIGNED_BYTE, video);
+      }
+    }
     gl!.clear(gl!.COLOR_BUFFER_BIT | gl!.DEPTH_BUFFER_BIT);
     gl!.uniform2f(uniforms.uViewport, width, height);
     gl!.uniform1f(uniforms.uRadius, geometry.radius);
@@ -167,13 +174,23 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
   function loseContext(event: Event) {
     event.preventDefault();
     failed = true;
+    for (const video of videos.values()) video.pause();
     cancelAnimationFrame(frame);
     options.onError();
   }
   canvas.addEventListener('webglcontextlost', loseContext);
   canvas.dataset.renderer = modern ? 'webgl2' : 'webgl';
 
-  const loads = options.images.map(({ src }) => new Promise<HTMLImageElement>((resolve, reject) => {
+  const loads = options.images.map(({ src, video: videoSrc }, index) => new Promise<HTMLImageElement>((resolve, reject) => {
+    if (videoSrc) {
+      const video = document.createElement('video');
+      video.muted = true; video.loop = true; video.playsInline = true;
+      video.preload = 'auto'; video.src = videoSrc;
+      videos.set(index, video);
+      video.addEventListener('loadeddata', () => {
+        if (!destroyed && !failed) { draw(); if (!paused) void video.play().catch(() => {}); }
+      });
+    }
     const image = new Image();
     image.crossOrigin = 'anonymous';
     image.onload = () => resolve(image);
@@ -193,7 +210,7 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
       const powerOfTwo = (n: number) => (n & (n - 1)) === 0;
-      const mipmaps = modern || (powerOfTwo(image.naturalWidth) && powerOfTwo(image.naturalHeight));
+      const mipmaps = !videos.has(textures.length - 1) && (modern || (powerOfTwo(image.naturalWidth) && powerOfTwo(image.naturalHeight)));
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, mipmaps ? gl.LINEAR_MIPMAP_LINEAR : gl.LINEAR);
       if (mipmaps) gl.generateMipmap(gl.TEXTURE_2D);
       if (anisotropy) gl.texParameterf(gl.TEXTURE_2D, anisotropy.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
@@ -218,12 +235,16 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
     },
     setPaused(nextPaused: boolean) {
       paused = nextPaused;
+      for (const video of videos.values()) {
+        if (paused) video.pause(); else void video.play().catch(() => {});
+      }
       lastTime = null;
       if (paused) { cancelAnimationFrame(frame); frame = 0; }
       else schedule();
     },
     destroy() {
       destroyed = true;
+      for (const video of videos.values()) { video.pause(); video.removeAttribute('src'); video.load(); }
       cancelAnimationFrame(frame);
       canvas.removeEventListener('webglcontextlost', loseContext);
       for (const texture of textures) gl.deleteTexture(texture);
