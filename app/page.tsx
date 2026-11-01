@@ -2,7 +2,7 @@ import { ArrowUpRight, Code2, Workflow, PanelsTopLeft, CornerDownRight } from 'l
 import { Reveal, ContactForm } from '@/components/site-interactions';
 import { SelectedWork } from '@/components/selected-work';
 import { SiteFooter } from '@/components/site-footer';
-import { SageHero } from '@/components/sage-hero';
+import { HandsHero } from '@/components/hands-hero';
 import type { Metadata } from 'next';
 import { businessSchema } from '@/lib/site';
 
@@ -13,7 +13,7 @@ export default function Home() {
   <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessSchema()).replace(/</g, '\\u003c') }} />
   <a className="skip-link" href="#main">Skip to content</a>
   <main id="main">
-   <SageHero />
+   <HandsHero />
 
    <section className="work-section" id="work" aria-labelledby="work-title">
     <SelectedWork />
