@@ -18,17 +18,17 @@ export function mountHands(canvas) {
  function resize(){
   const r=canvas.getBoundingClientRect();W=r.width;H=r.height;DPR=Math.min(2,devicePixelRatio||1);
   canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);
-  step=Math.max(5,W/205);rowStep=step*2.05;cols=Math.ceil(W/step);rows=Math.ceil(H/rowStep);
+  step=Math.max(2.2,W/320)*1.05;rowStep=step*1.5;cols=Math.ceil(W/step);rows=Math.ceil(H/rowStep);
   fields.forEach(c=>{c.width=cols;c.height=rows});
   seeds=new Float32Array(cols*rows);for(let j=0;j<rows;j++)for(let i=0;i<cols;i++)seeds[j*cols+i]=.55*hash(i,j)+.45*hash(j*3.1,7.7);
   if(ready)render((performance.now()-t0)/1000);
  }
  function paintField(c,pose,t){
   c.setTransform(1,0,0,1,0,0);c.fillStyle='#fff';c.fillRect(0,0,cols,rows);
-  const portrait=H>W,hw=W*(portrait?.66:.53),hh=hw*(.40*1520)/(.47*2688),cy=H*(portrait?.66:.54),a=2*Math.PI*t/20;
+  const portrait=H>W,hw=W*(portrait?.52:.53),hh=hw*(.40*1520)/(.47*2688),cy=H*(portrait?.57:.54),a=2*Math.PI*t/20;
   for(let hand=0;hand<2;hand++){
-   const left=hand===0,ph=left?0:Math.PI,reach=(.035*Math.sin(a+ph)+.012*Math.sin(2*a+1.3+ph))*W;
-   const scale=1+.07*Math.sin(a+.9+ph),rot=(left?1:-1)*.045*Math.sin(a+2.1+ph),x=left?reach-W*.045:W-hw+W*.045-reach,pivot=left?0:W;
+   const left=hand===0,ph=left?0:Math.PI,reach=((portrait?.015:.035)*Math.sin(a+ph)+(portrait?.006:.012)*Math.sin(2*a+1.3+ph))*W;
+   const scale=1+(portrait?.035:.07)*Math.sin(a+.9+ph),rot=(left?1:-1)*.045*Math.sin(a+2.1+ph),x=left?reach-W*.045:W-hw+W*.045-reach,pivot=left?0:W;
    c.save();c.scale(cols/W,rows/H);c.translate(pivot,cy);c.rotate(rot);c.scale(scale,scale);c.translate(-pivot,-cy);c.drawImage(tiles[pose*2+hand],x,cy-hh/2,hw,hh);c.restore();
   }
  }
@@ -43,13 +43,11 @@ export function mountHands(canvas) {
    const shift=hash(j,tick)>.965?Math.round((hash(tick,j)-.5)*8):0;
    for(let i=0;i<cols;i++){
     const k=j*cols+i,seed=seeds[k],m=i<cols/2?mL:mR,field=seed<m?B:A,ii=clamp(i-shift,0,cols-1),lum=field[(j*cols+ii)*4]/255;
-    let v=clamp((1-lum-.16)/.42);
+    let v=Math.pow(clamp((1-lum-.035)/.86),.86);
     if(m>.001&&m<.999&&Math.abs(seed-m)<.12){v*=Math.abs(seed-m)/.12;if(hash(i+tick,j)<=.4)v*=.3}
-    v*=.86+.14*Math.sin(t*3.2+seed*40);
-    const cx=Math.abs((i+.5)/cols-.5),ex=cx/(portrait?.44:.2),ey=((j+.5)*rowStep/H-(portrait?.33:.385))/.085;
-    v*=smooth(.035,.11,cx)*smooth(.85,1.25,Math.hypot(ex,ey));
-    const levels=[0,.26,.52,.78,1];let level=0;for(let l=1;l<5;l++)if(v>=levels[l]-.13)level=levels[l];
-    if(!level)continue;const x=(i+.5)*step,y=(j+.5)*rowStep,r=R*(level===.26?.38:level);ctx.moveTo(x+r,y);ctx.arc(x,y,r,0,Math.PI*2);
+    v*=.96+.04*Math.sin(t*3.2+seed*40);
+    const level=Math.round(v*10)/10;
+    if(!level)continue;const x=(i+.5)*step,y=(j+.5)*rowStep,r=R*Math.sqrt(level);ctx.moveTo(x+r,y);ctx.arc(x,y,r,0,Math.PI*2);
    }
   }
   ctx.fill();
