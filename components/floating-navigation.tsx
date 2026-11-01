@@ -41,7 +41,7 @@ export function FloatingNavigation() {
   <div className={styles.links} id="main-navigation" data-open={open}>
    {links.map(label => <a key={label} href={'#' + label.toLowerCase()} onClick={() => setOpen(false)}>{label}</a>)}
   </div>
-  <a className={styles.contact} href="#contact" onClick={() => setOpen(false)}>Let’s talk <span aria-hidden="true">↗</span></a>
+  <a className={styles.contact} href="#contact" onClick={() => setOpen(false)}>Let’s talk</a>
   <button ref={toggle} className={styles.toggle} type="button" aria-controls="main-navigation" aria-expanded={open} aria-label={open ? 'Close navigation' : 'Open navigation'} onClick={() => setOpen(value => !value)}><span /><span /></button>
  </nav>;
 }
