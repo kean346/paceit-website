@@ -14,7 +14,9 @@ export const site = {
   email: 'info@paceit.co.za',
   title: 'Custom Software & Automation in Pretoria | paceIT',
   description: 'Custom software, web applications and business automation from paceIT, an independent technology studio in Pretoria, South Africa.',
-  socialImage: '/social/paceit.png',
+  socialImage: '/social/paceit-connected.png',
+  socialImageWidth: 1731,
+  socialImageHeight: 909,
 };
 
 export const isPreview = process.env.VERCEL_ENV === 'preview';
@@ -24,7 +26,7 @@ export const absoluteUrl = (path: string) => new URL(path, site.url).toString();
 
 export function pageMetadata({ title, description, path }: { title: string; description: string; path: string }): Metadata {
   const fullTitle = `${title} | ${site.name}`;
-  const images = [{ url: site.socialImage, width: 1200, height: 630, alt: 'paceIT — Custom software and automation. Pretoria, South Africa.' }];
+  const images = [{ url: site.socialImage, width: site.socialImageWidth, height: site.socialImageHeight, alt: 'paceIT — Your business. Better connected. Websites, software and automation.' }];
   return {
     title, description, alternates: { canonical: path },
     openGraph: { title: fullTitle, description, type: 'website', siteName: site.name, locale: 'en_ZA', url: absoluteUrl(path), images },

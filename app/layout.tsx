@@ -25,8 +25,8 @@ export const metadata: Metadata = {
  description: site.description,
  applicationName: site.name,
  robots: isPreview ? { index: false, follow: false } : { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 } },
- openGraph: { title: site.title, description: site.description, type: 'website', siteName: site.name, locale: 'en_ZA', url: absoluteUrl('/'), images: [{ url: site.socialImage, width: 1200, height: 630, alt: 'paceIT — Custom software and automation. Pretoria, South Africa.' }] },
- twitter: { card: 'summary_large_image', title: site.title, description: site.description, images: [{ url: site.socialImage, alt: 'paceIT — Custom software and automation. Pretoria, South Africa.' }] },
+ openGraph: { title: site.title, description: site.description, type: 'website', siteName: site.name, locale: 'en_ZA', url: absoluteUrl('/'), images: [{ url: site.socialImage, width: site.socialImageWidth, height: site.socialImageHeight, alt: 'paceIT — Your business. Better connected. Websites, software and automation.' }] },
+ twitter: { card: 'summary_large_image', title: site.title, description: site.description, images: [{ url: site.socialImage, alt: 'paceIT — Your business. Better connected. Websites, software and automation.' }] },
 };
 export default function RootLayout({ children }: Readonly<{children: React.ReactNode}>) {
  return <html lang="en-ZA"><body className={`${jakarta.variable} ${space.variable}`}>{children}</body></html>;

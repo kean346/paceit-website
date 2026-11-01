@@ -3,6 +3,7 @@ import { ContactForm } from '@/components/site-interactions';
 import { SelectedWork } from '@/components/selected-work';
 import { SiteFooter } from '@/components/site-footer';
 import { HandsHero } from '@/components/hands-hero';
+import { FloatingNavigation } from '@/components/floating-navigation';
 import { ServicesCombined } from '@/components/services-combined';
 import type { Metadata } from 'next';
 import { businessSchema } from '@/lib/site';
@@ -13,6 +14,7 @@ export default function Home() {
  return <>
   <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessSchema()).replace(/</g, '\\u003c') }} />
   <a className="skip-link" href="#main">Skip to content</a>
+  <FloatingNavigation />
   <main id="main">
    <HandsHero />
 

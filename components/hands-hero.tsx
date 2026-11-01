@@ -1,38 +1,18 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { mountHands } from './hands-animation';
 import styles from './hands-hero.module.css';
 
-const navigation = ['Work', 'Services', 'About', 'Contact'];
-
 export function HandsHero() {
  const canvas = useRef<HTMLCanvasElement>(null);
- const menuButton = useRef<HTMLButtonElement>(null);
- const [menuOpen, setMenuOpen] = useState(false);
 
  useEffect(() => {
   if (canvas.current) return mountHands(canvas.current);
  }, []);
 
- useEffect(() => {
-  const close = (event: KeyboardEvent) => {
-   if (event.key === 'Escape' && menuOpen) { setMenuOpen(false); menuButton.current?.focus(); }
-  };
-  const resize = () => { if (innerWidth > 760) setMenuOpen(false); };
-  window.addEventListener('keydown', close);
-  window.addEventListener('resize', resize);
-  return () => { window.removeEventListener('keydown', close); window.removeEventListener('resize', resize); };
- }, [menuOpen]);
-
  return <section className={styles.hero} id="home" aria-labelledby="hero-title">
   <canvas ref={canvas} aria-hidden="true" />
-  <nav className="navigation" aria-label="Main navigation">
-   <a className="brand" href="#home" aria-label="paceIT home" onClick={() => setMenuOpen(false)}>pace<b>IT.</b></a>
-   <div className={menuOpen ? 'nav-links open' : 'nav-links'} id="main-navigation">{navigation.map(label => <a key={label} href={'#' + label.toLowerCase()} onClick={() => setMenuOpen(false)}>{label}</a>)}</div>
-   <a className="nav-cta" href="#contact" onClick={() => setMenuOpen(false)}>Let’s talk</a>
-   <button ref={menuButton} type="button" className="menu-button" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-controls="main-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(open => !open)}><span /><span /></button>
-  </nav>
   <div className="copy"><h1 id="hero-title"><span>Connecting</span>Your business.</h1><p>Websites, apps and automation.<br />Thoughtfully connected. Built around you.</p><div className="cta"><a href="#contact">Let’s build together</a></div></div>
   <div className="services" aria-label="What we build">
 <div className="service"><svg className="mini" viewBox="0 0 44 34" aria-hidden="true"><rect className="frame" x="1" y="2" width="42" height="29" rx="4"/><path className="line" d="M2 9h40"/><circle className="dark" cx="5" cy="5.5" r=".7"/><circle className="green" cx="8" cy="5.5" r=".7"/><rect className="green" x="5" y="13" width="8" height="14" rx="1"/><rect className="paper" x="16" y="13" width="23" height="6" rx="1"/><path className="line" d="M17 23h8m-8 3h5"/><path className="wire" d="m29 26 3-4 3 2 4-5"/></svg><span>Web apps</span></div>
