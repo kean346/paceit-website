@@ -18,7 +18,7 @@ export function mountHands(canvas) {
  function resize(){
   const r=canvas.getBoundingClientRect();W=r.width;H=r.height;DPR=Math.min(2,devicePixelRatio||1);
   canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);
-  step=Math.max(2.2,W/320)*1.05;rowStep=step*1.5;cols=Math.ceil(W/step);rows=Math.ceil(H/rowStep);
+  step=Math.max(2.2,W/320)*1.05*1.10;rowStep=step*1.5;cols=Math.ceil(W/step);rows=Math.ceil(H/rowStep);
   fields.forEach(c=>{c.width=cols;c.height=rows});
   seeds=new Float32Array(cols*rows);for(let j=0;j<rows;j++)for(let i=0;i<cols;i++)seeds[j*cols+i]=.55*hash(i,j)+.45*hash(j*3.1,7.7);
   if(ready)render((performance.now()-t0)/1000);
