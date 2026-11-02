@@ -1,3 +1,5 @@
+import { createGalleryVideoPlayback } from './gallery-video';
+
 /** A shared triangle mesh keeps curved previews on one continuous drawing surface. */
 export type GalleryRendererOptions = {
   images: { src: string; video?: string }[];
@@ -129,6 +131,7 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
   const anisotropy = gl.getExtension('EXT_texture_filter_anisotropic');
   const textures: WebGLTexture[] = [];
   const videos = new Map<number, HTMLVideoElement>();
+  const playback = new Map<number, ReturnType<typeof createGalleryVideoPlayback>>();
   let width = 0, height = 0, phase = 1, lastTime: number | null = null, frame = 0;
   let paused = true, ready = false, destroyed = false, failed = false;
 
@@ -174,7 +177,7 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
   function loseContext(event: Event) {
     event.preventDefault();
     failed = true;
-    for (const video of videos.values()) video.pause();
+    for (const controller of playback.values()) controller.setActive(false);
     cancelAnimationFrame(frame);
     options.onError();
   }
@@ -184,12 +187,11 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
   const loads = options.images.map(({ src, video: videoSrc }, index) => new Promise<HTMLImageElement>((resolve, reject) => {
     if (videoSrc) {
       const video = document.createElement('video');
-      video.muted = true; video.loop = true; video.playsInline = true;
-      video.preload = 'auto'; video.src = videoSrc;
+      const controller = createGalleryVideoPlayback(video, () => { if (!destroyed && !failed) draw(); });
+      video.src = videoSrc;
       videos.set(index, video);
-      video.addEventListener('loadeddata', () => {
-        if (!destroyed && !failed) { draw(); if (!paused) void video.play().catch(() => {}); }
-      });
+      playback.set(index, controller);
+      controller.setActive(!paused);
     }
     const image = new Image();
     image.crossOrigin = 'anonymous';
@@ -221,7 +223,7 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
     options.onReady();
     schedule();
   }).catch(() => {
-    if (!destroyed) { failed = true; options.onError(); }
+    if (!destroyed) { failed = true; for (const controller of playback.values()) controller.setActive(false); options.onError(); }
   });
 
   return {
@@ -235,15 +237,14 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
     },
     setPaused(nextPaused: boolean) {
       paused = nextPaused;
-      for (const video of videos.values()) {
-        if (paused) video.pause(); else void video.play().catch(() => {});
-      }
+      for (const controller of playback.values()) controller.setActive(!paused);
       lastTime = null;
       if (paused) { cancelAnimationFrame(frame); frame = 0; }
       else schedule();
     },
     destroy() {
       destroyed = true;
+      for (const controller of playback.values()) controller.destroy();
       for (const video of videos.values()) { video.pause(); video.removeAttribute('src'); video.load(); }
       cancelAnimationFrame(frame);
       canvas.removeEventListener('webglcontextlost', loseContext);

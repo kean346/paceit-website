@@ -11,6 +11,7 @@ const root = path.resolve(__dirname, '..');
 const moduleSource = ts.transpileModule(fs.readFileSync(path.join(root, 'lib/curved-gallery-renderer.ts'), 'utf8'), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
 }).outputText;
+const playbackSource = ts.transpileModule(fs.readFileSync(path.join(root, 'lib/gallery-video.ts'), 'utf8'), { compilerOptions: { module: ts.ModuleKind.ESNext } }).outputText;
 const image = createCanvas(32, 16);
 const context = image.getContext('2d');
 context.fillStyle = '#2c6a90'; context.fillRect(0, 0, 32, 16);
@@ -62,7 +63,7 @@ window.fixture = {
 
 (async () => {
   const server = http.createServer((request, response) => {
-    const [content, type] = request.url === '/renderer.js' ? [moduleSource, 'text/javascript'] : request.url === '/image.png' ? [imageBytes, 'image/png'] : [html, 'text/html'];
+    const [content, type] = request.url === '/gallery-video' ? [playbackSource, 'text/javascript'] : request.url === '/renderer.js' ? [moduleSource, 'text/javascript'] : request.url === '/image.png' ? [imageBytes, 'image/png'] : [html, 'text/html'];
     response.writeHead(200, { 'Content-Type': type }); response.end(content);
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));

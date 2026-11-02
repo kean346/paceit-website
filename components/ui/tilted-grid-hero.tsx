@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createGalleryVideoPlayback } from '@/lib/gallery-video';
 import { cn } from "@/lib/utils";
 import type { createGalleryRenderer } from "@/lib/curved-gallery-renderer";
 
@@ -27,6 +28,20 @@ export type TiltedGridHeroProps = {
   tileClassName?: string;
   className?: string;
 };
+
+function FallbackVideo({ src, poster, paused }: { src: string; poster: string; paused: boolean }) {
+  const element = React.useRef<HTMLVideoElement>(null);
+  const playback = React.useRef<ReturnType<typeof createGalleryVideoPlayback> | null>(null);
+  React.useEffect(() => {
+    if (!element.current) return;
+    const controller = createGalleryVideoPlayback(element.current);
+    playback.current = controller;
+    controller.setActive(!paused);
+    return () => { controller.destroy(); playback.current = null; };
+  }, [src]);
+  React.useEffect(() => playback.current?.setActive(!paused), [paused]);
+  return <video ref={element} src={src} poster={poster} muted loop playsInline preload="auto" className="h-full w-full object-contain" />;
+}
 
 /** A cylinder drawn on one surface, without independently clipped CSS strips. */
 export function TiltedGridHero({
@@ -101,9 +116,7 @@ export function TiltedGridHero({
         animation: `${fallback} ${images.length * speed}s linear infinite`, animationPlayState: isPaused ? 'paused' : 'running',
       }}>
         {[...images, ...images].map((image, i) => <div key={i} className={cn('shrink-0 overflow-hidden rounded-2xl', tileClassName)} style={{ width: u(aspectRatio), height: u(1) }}>
-          {image.video ? <video src={image.video} poster={image.src} muted loop playsInline autoPlay={!isPaused}
-            ref={element => { if (element) { if (isPaused) element.pause(); else void element.play().catch(() => {}); } }}
-            className="h-full w-full object-contain" /> : <img src={image.src} alt="" width={1600} height={900} loading="lazy" decoding="async" draggable={false} className="h-full w-full object-cover" />}
+          {image.video ? <FallbackVideo src={image.video} poster={image.src} paused={isPaused} /> : <img src={image.src} alt="" width={1600} height={900} loading="lazy" decoding="async" draggable={false} className="h-full w-full object-cover" />}
         </div>)}
       </div>
     </div>}
