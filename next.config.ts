@@ -6,9 +6,9 @@ const contentSecurityPolicy = [
   // third-party scripts are allowed. A nonce policy would require dynamic HTML.
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https://d2ol7oe51mr4n9.cloudfront.net",
   "font-src 'self'",
-  "media-src 'self' blob:",
+  "media-src 'self' blob: https://d8j0ntlcm91z4.cloudfront.net",
   "connect-src 'self'",
   "object-src 'none'",
   "frame-src 'none'",

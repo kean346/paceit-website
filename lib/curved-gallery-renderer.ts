@@ -132,6 +132,7 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
   const textures: WebGLTexture[] = [];
   const videos = new Map<number, HTMLVideoElement>();
   const playback = new Map<number, ReturnType<typeof createGalleryVideoPlayback>>();
+  const uploadedTimes = new Map<number, number>();
   let width = 0, height = 0, phase = 1, lastTime: number | null = null, frame = 0;
   let paused = true, ready = false, destroyed = false, failed = false;
 
@@ -140,9 +141,10 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
     const geometry = galleryGeometry(width, height, options);
     if (!(geometry.pitch > 0)) return;
     for (const [index, video] of videos) {
-      if (video.readyState >= 2) {
+      if (video.readyState >= 2 && uploadedTimes.get(index) !== video.currentTime) {
         gl!.bindTexture(gl!.TEXTURE_2D, textures[index]);
         gl!.texImage2D(gl!.TEXTURE_2D, 0, gl!.RGBA, gl!.RGBA, gl!.UNSIGNED_BYTE, video);
+        uploadedTimes.set(index, video.currentTime);
       }
     }
     gl!.clear(gl!.COLOR_BUFFER_BIT | gl!.DEPTH_BUFFER_BIT);
@@ -166,6 +168,8 @@ export function createGalleryRenderer(canvas: HTMLCanvasElement, options: Galler
   function tick(time: number) {
     frame = 0;
     if (paused || destroyed || failed) return;
+    // The reel advances at the same speed without rendering at 90/120 Hz.
+    if (lastTime !== null && time - lastTime < 1000 / 30 - 1) { schedule(); return; }
     if (lastTime !== null) phase += Math.min(time - lastTime, 100) / (Math.max(.1, options.speed) * 1000);
     lastTime = time;
     draw();

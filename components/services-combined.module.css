@@ -178,6 +178,10 @@
     }
 
 @font-face { font-family:"Services Inter"; src:url('/fonts/services/inter-regular.ttf') format('truetype'); font-style:normal; font-weight:400; font-display:swap; }
+/* Keep decorative loops from consuming frames outside the viewport. */
+.section:global(.sc-offscreen) :global(*),
+.section:global(.sc-offscreen) :global(*::before),
+.section:global(.sc-offscreen) :global(*::after) { animation-play-state: paused !important; }
 /* paceIT integration: local refinements to the reference composition. */
 .section :global(.sc-paper) { position:absolute; inset:0; z-index:-1; width:100%; height:100%; pointer-events:none; opacity:.48; mix-blend-mode:multiply; }
 .section :global(.sc-title .sc-title-line) { display:block; color:#222; white-space:nowrap; }

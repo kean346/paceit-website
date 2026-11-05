@@ -44,6 +44,8 @@ export function ServicesCombined() {
     const activeSize = video.classList.contains('sc-stage-video--mobile') ? narrow.matches
      : video.classList.contains('sc-stage-video--wide') ? !narrow.matches : true;
     if (!disposed && !document.hidden && !reduced.matches && activeSize && visible.has(video)) {
+     if (!video.getAttribute('poster') && video.dataset.poster) video.poster = video.dataset.poster;
+     if (!video.getAttribute('src') && video.dataset.src) video.src = video.dataset.src;
      video.muted = true;
      void video.play().catch(() => { /* Original posters remain visible if playback is unavailable. */ });
     } else video.pause();
@@ -59,6 +61,10 @@ export function ServicesCombined() {
    }
   }, { threshold: .08 });
   entrance.observe(root);
+  const activity = new IntersectionObserver(([entry]) => {
+   root.classList.toggle('sc-offscreen', !entry.isIntersecting);
+  });
+  activity.observe(root);
   const playback = new IntersectionObserver(entries => {
    entries.forEach(entry => {
     const video = entry.target as HTMLVideoElement;
@@ -72,7 +78,7 @@ export function ServicesCombined() {
   document.addEventListener('visibilitychange', updatePlayback);
   return () => {
    disposed = true;
-   entrance.disconnect(); playback.disconnect();
+   entrance.disconnect(); playback.disconnect(); activity.disconnect();
    videos.forEach(video => video.pause());
    reduced.removeEventListener('change', updatePlayback);
    narrow.removeEventListener('change', updatePlayback);
@@ -83,11 +89,11 @@ export function ServicesCombined() {
  return (
   <section ref={section} className={styles.section} id="services" aria-labelledby="services-title">
     <video className="sc-stage-video sc-stage-video--wide" muted loop playsInline preload="none" aria-hidden="true"
-      poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/5c3ec08f-2dbf-4c0a-8588-f6106a789443.webp"
-      src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_125226_45cb4f38-aa7e-47e1-885d-ae0b69745369.mp4"></video>
+      data-poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/5c3ec08f-2dbf-4c0a-8588-f6106a789443.webp"
+      data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_125226_45cb4f38-aa7e-47e1-885d-ae0b69745369.mp4"></video>
     <video className="sc-stage-video sc-stage-video--mobile" muted loop playsInline preload="none" aria-hidden="true"
-      poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/0f4926a4-e660-4df2-9195-2bfb3e341bdd.webp"
-      src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_125242_daae1570-386d-4bd5-8896-80499e2371e0.mp4"></video>
+      data-poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/0f4926a4-e660-4df2-9195-2bfb3e341bdd.webp"
+      data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_125242_daae1570-386d-4bd5-8896-80499e2371e0.mp4"></video>
     <div className="sc-stage-tint" aria-hidden="true"></div>
     <svg className="sc-paper" aria-hidden="true" width="100%" height="100%">
       <defs>
@@ -116,8 +122,8 @@ export function ServicesCombined() {
       <div className="sc-cards" aria-label="What we can build">
         <article className="sc-card sc-card--software" id="custom-software">
           <video className="sc-card__video" muted loop playsInline preload="none" aria-hidden="true"
-            poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/167977c6-8539-46b1-9a15-8dba566f50b8.png"
-            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_130045_1a612b69-4854-4b34-8043-ccb91f2c60af.mp4"></video>
+            data-poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/167977c6-8539-46b1-9a15-8dba566f50b8.png"
+            data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_130045_1a612b69-4854-4b34-8043-ccb91f2c60af.mp4"></video>
           <div className="sc-card__gradient" aria-hidden="true" /><div className="sc-card__shine" aria-hidden="true" />
           <div className="sc-card__head"><span className="sc-card__number">01 / SOFTWARE</span><h3>Software that fits.</h3></div>
           <div className="sc-visual sc-visual--software" aria-hidden="true"><span className="sc-core">&lt;/&gt;</span></div>
@@ -125,8 +131,8 @@ export function ServicesCombined() {
         </article>
         <article className="sc-card sc-card--automation" id="business-automation">
           <video className="sc-card__video" muted loop playsInline preload="none" aria-hidden="true"
-            poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/0446d1d5-e65e-4db5-8090-3e30d09afc43.png"
-            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_130054_dd005674-d693-4d81-80a5-357f7f10b3a3.mp4"></video>
+            data-poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/0446d1d5-e65e-4db5-8090-3e30d09afc43.png"
+            data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_130054_dd005674-d693-4d81-80a5-357f7f10b3a3.mp4"></video>
           <div className="sc-card__gradient" aria-hidden="true" /><div className="sc-card__shine" aria-hidden="true" />
           <div className="sc-card__head"><span className="sc-card__number">02 / AUTOMATION</span><h3>Less busywork.</h3></div>
           <div className="sc-visual sc-visual--automation" aria-hidden="true"><div className="sc-flow-panel">
@@ -136,8 +142,8 @@ export function ServicesCombined() {
         </article>
         <article className="sc-card sc-card--insight" id="dashboards-reporting">
           <video className="sc-card__video" muted loop playsInline preload="none" aria-hidden="true"
-            poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/da8d0242-4dee-4f6d-813f-a5887e86ad77.png"
-            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_130103_7550f407-f14b-40a6-9616-7a26d7a8bd9f.mp4"></video>
+            data-poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/da8d0242-4dee-4f6d-813f-a5887e86ad77.png"
+            data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_130103_7550f407-f14b-40a6-9616-7a26d7a8bd9f.mp4"></video>
           <div className="sc-card__gradient" aria-hidden="true" /><div className="sc-card__shine" aria-hidden="true" />
           <div className="sc-card__head"><span className="sc-card__number">03 / INSIGHT</span><h3>A clearer picture.</h3></div>
           <div className="sc-visual sc-visual--insight" aria-hidden="true">

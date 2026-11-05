@@ -51,7 +51,8 @@ const canonical = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://paceit.co
     assert.equal((await context.request.get(base + '/api/enquiry')).status(), 405);
     assert.equal((await context.request.post(base + '/api/enquiry', { headers: { Origin: 'https://attacker.example' }, data: {} })).status(), 403);
     assert(!requests.includes('/work/flow-plumbing-demo.mp4'), 'Film must not download above the fold');
-    assert(!requests.includes('/work/sa-family-travel-elephants.webp'), 'Offscreen gallery must not fetch textures');
+    assert(!requests.includes('/work/noreva-preview.mp4'), 'Offscreen gallery must not fetch video');
+    assert(!requests.some(path => /hf_2026/.test(path)), 'Offscreen Services videos must not download');
     console.log('PASS: metadata, schema, crawl files, 404s, headers and deferred media');
 
     for (const width of [320, 390, 768, 1440, 1920]) {
@@ -79,16 +80,22 @@ const canonical = new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://paceit.co
       return false;
     });
     assert(moving, 'Gallery must move after resuming');
-    assert(requests.includes('/work/sa-family-travel-elephants.webp'));
+    assert(requests.includes('/work/noreva-preview.mp4'));
     await page.getByRole('tab', { name: /Daylight/ }).click();
     await page.getByRole('heading', { name: 'A well-planned week.' }).waitFor();
     await page.getByRole('tab', { name: /Relay/ }).click();
     await page.getByRole('heading', { name: 'Project board' }).waitFor();
     await page.getByRole('tab', { name: /Flow Plumbing/ }).click();
-    await page.getByRole('button', { name: 'Play film', exact: true }).click();
-    await page.waitForFunction(() => document.querySelector('video').currentTime > 0);
+    await page.locator('.product-film').scrollIntoViewIfNeeded();
+    // Visibility may already have started the film; do not toggle it off.
+    const playFilm = page.getByRole('button', { name: /^(Play film|Play film again)$/ });
+    if (await playFilm.count()) await playFilm.click();
+    await page.waitForFunction(() => {
+      const film = document.querySelector('.product-film-video');
+      return film && !film.paused && film.currentTime > 0;
+    });
     await page.getByRole('button', { name: 'Pause film', exact: true }).click();
-    console.log('PASS: five responsive widths, gallery pause/resume, elephant asset, demo tabs and film playback');
+    console.log('PASS: five responsive widths, gallery pause/resume, Noreva asset, demo tabs and film playback');
 
     const form = page.locator('.contact-form');
     const enquiry = { name: 'Alex Morgan', email: 'alex@example.com', idea: 'Please help us simplify our customer quotes.' };

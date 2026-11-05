@@ -32,6 +32,7 @@ The primary canonical URL is `https://paceit.co.za`, confirmed by the owner. `NE
 npm run test:enquiry  # Mock SMTP only; no email sent
 npm run test:gallery  # Real GPU regression checks
 npm run test:site     # Requires npm start on port 3004; mocks form requests
+node tests/performance-audit.cjs # Same server; mobile CPU/network throttling and offscreen work checks
 ```
 
 The browser checks use system Chromium by default; set `PACEIT_CHROMIUM_PATH` or `AUDIT_BASE_URL` as needed. The security headers are defined in `next.config.ts`. The homepage remains statically rendered; optional demos, gallery textures and film downloads are deferred until needed.
