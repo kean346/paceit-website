@@ -10,6 +10,6 @@ export const business = {
     postalCode: '0002',
     addressCountry: 'ZA',
   },
-  policyUpdated: '2026-10-25',
-  policyUpdatedLabel: '25 October 2026',
+  policyUpdated: '2026-11-05',
+  policyUpdatedLabel: '5 November 2026',
 };

@@ -201,3 +201,11 @@ select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--green-dark
 .demo-form label,.demo-form-note{color:#526348}
 .contact-form input:not([type="checkbox"]),.contact-form textarea{border-bottom-color:#789381}
 .contact-form [aria-invalid="true"]{border-bottom-color:#ffd8bc}
+
+/* Legal summaries use the existing content-page tokens and typefaces. */
+.legal-summary{margin-top:32px;padding:26px 30px;border:1px solid var(--line);border-left:3px solid var(--green-dark);border-radius:8px;background:var(--paper)}
+.legal-summary h2{font-size:20px;line-height:1.4;letter-spacing:-.4px;margin-bottom:16px}
+.legal-summary ul{margin:0;padding-left:20px;display:grid;gap:10px}
+.legal-summary li{font-size:14px;line-height:1.8;color:var(--ink)}
+.legal-summary>p{font-size:12px;line-height:1.8;color:#46554b;margin-top:18px}
+@media(max-width:600px){.legal-summary{padding:22px 20px}}

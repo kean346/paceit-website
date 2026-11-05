@@ -21,3 +21,7 @@ The owner explicitly requires the gallery to autoplay on entry, including when r
 ## Verification
 
 `npm run test:accessibility` checks automated WCAG A/AA rules, legal routes, both concepts and dialogs, keyboard enquiries, reduced motion and tracking/storage absence. `npm run test:site` covers responsive layouts, metadata, security headers, media and mocked enquiry outcomes. `npm run test:enquiry` covers server security. Automated results are not a claim of complete WCAG conformance; screen-reader, other browser and image/video text review remain separate work.
+
+## Legal page summaries
+
+Terms and privacy pages use the shared LegalPage summary panel: existing paper background, line border and green-dark accent, with no new theme tokens. Summaries supplement the full numbered sections and remain optional for other legal routes. Content revisions are prepared for owner review before publication.

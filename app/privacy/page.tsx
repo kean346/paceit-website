@@ -10,7 +10,12 @@ export const metadata = pageMetadata({
 const email = <a href={`mailto:${site.email}`}>{site.email}</a>;
 
 export default function Privacy() {
-  return <LegalPage title="Privacy Policy" introduction={<p>This notice explains how paceIT handles personal information when you visit this website, send an enquiry or become a client.</p>} sections={[
+  return <LegalPage title="Privacy Policy" introduction={<p>This notice explains how paceIT handles personal information when you visit this website, send an enquiry or become a client. It describes our own processing under South Africa’s Protection of Personal Information Act (POPIA).</p>} summary={[
+    'We use the details you send to respond to your enquiry and deliver agreed work.',
+    'Vercel hosts the website and Brevo delivers enquiry emails. We do not sell your information.',
+    'The website has no analytics or advertising tracking. Sending an enquiry does not subscribe you to marketing.',
+    'Contact info@paceit.co.za to ask about access, corrections or deletion. Legal exceptions may apply.',
+  ]} sections={[
     { id: 'responsible-party', title: 'Who is responsible', content: <>
       <p>paceIT is the trading name of {business.ownerName}, operating as a sole proprietor in South Africa.</p>
       <dl className="legal-details"><div><dt>Responsible party</dt><dd>{business.ownerName}, trading as paceIT</dd></div><div><dt>Information Officer</dt><dd>{business.ownerName}</dd></div><div><dt>Business location</dt><dd>{business.location}</dd></div><div><dt>Privacy contact</dt><dd>{email}</dd></div></dl>
@@ -39,6 +44,7 @@ export default function Privacy() {
     { id: 'security', title: 'Access and security', content: <>
       <p>Administrative access at paceIT is restricted to the business owner. Service providers process information as needed to deliver hosting, email and related services.</p>
       <p>We use TLS/SSL for website connections and encrypted SMTP delivery. The enquiry form checks input on the server and applies request limits and spam checks. SMTP credentials stay on the server and are not included in the website’s public code.</p>
+      <p>No system can guarantee complete security. Where a compromise requires notification under POPIA, we will notify the Information Regulator and affected people as soon as reasonably possible, subject to the lawful exceptions and directions that apply.</p>
     </> },
     { id: 'cookies', title: 'Cookies and browser storage', content: <>
       <p>This version of the website does not use analytics or advertising cookies, or persistent browser storage for visitor data. The interactive portfolio concepts use temporary page state and reset when the page is reloaded.</p>
@@ -55,6 +61,13 @@ export default function Privacy() {
     </> },
     { id: 'updates', title: 'Updates to this notice', content: <>
       <p>We may update this notice when our services or processing practices change. The date at the top identifies the current version. For questions, contact {email}.</p>
+    </> },
+    { id: 'client-data', title: 'Information processed for clients', content: <>
+      <p>A client’s application may handle information about that client’s staff or customers. Where paceIT processes that information on the client’s instructions, the client’s privacy notice and our agreed processing arrangements govern that work. This website notice does not replace them.</p>
+    </> },
+    { id: 'children-and-links', title: 'Children and external links', content: <>
+      <p>This business website is not directed at children and does not ask for children’s information. If you believe a child has shared personal information here, contact the Information Officer so that we can assess and address it under applicable law.</p>
+      <p>When you follow an external link, the other website’s privacy practices apply to your activity there. Review its notice before sharing information.</p>
     </> },
   ]}/>;
 }
