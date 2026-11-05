@@ -45,7 +45,7 @@ const galleryImages = [
   { src: '/work/soda-poster.webp', video: '/work/soda-preview.mp4', alt: 'Soda product demo video' },
   { src: '/work/forme-poster.webp', video: '/work/forme-preview.mp4', alt: 'Forme product demo video' },
   { src: '/work/daylight-preview.webp', alt: 'Mr Braai Guy quotation dashboard' },
-  { src: '/work/analytics-preview.webp', alt: 'Northstar analytics dashboard' },
+  { src: '/work/noreva-poster.webp', video: '/work/noreva-preview.mp4', alt: 'Noreva dashboard video' },
 ];
 
 export function SelectedWork() {
